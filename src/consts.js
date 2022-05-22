@@ -42,6 +42,32 @@ export const EVENT_OFFERS = [
     ],
   },
   {
+    type: "transport",
+    offers: [
+      {
+        title: "Upgrade to a business class",
+        price: 120,
+      },
+      {
+        title: "Choose the radio station",
+        price: 30,
+      },
+    ],
+  },
+  {
+    type: "check-in",
+    offers: [
+      {
+        title: "Upgrade to a business class",
+        price: 120,
+      },
+      {
+        title: "Choose the radio station",
+        price: 30,
+      },
+    ],
+  },
+  {
     type: "bus",
     offers: [
       {
@@ -85,6 +111,23 @@ export const EVENT_OFFERS = [
       {
         title: "TV",
         price: 20,
+      },
+    ],
+  },
+  {
+    type: "drive",
+    offers: [
+      {
+        title: "good company",
+        price: 100,
+      },
+      {
+        title: "conditioner",
+        price: 20,
+      },
+      {
+        title: "music",
+        price: 205,
       },
     ],
   },

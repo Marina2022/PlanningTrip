@@ -1,56 +1,39 @@
-import {EVENT_TYPES_TO, EVENT_TYPES, EVENT_TYPES_IN, CITIES} from "../consts"
+import {
+  EVENT_TYPES_TO,
+  EVENT_TYPES,
+  EVENT_TYPES_IN,
+  CITIES,
+  EVENT_OFFERS,
+} from "../consts";
 import { getDate, getTime } from "../utils/date";
 
-const generateEventDetails = () => {
+const generateEventDetails = (selectedOffers, type) => {
+      let allPossibleOffers = EVENT_OFFERS.find((item)=>{return item.type == type;});
+      
+      if (allPossibleOffers == undefined) return ``;  // значит, нет офферов на этот тип события
+      else allPossibleOffers = allPossibleOffers.offers;
+      console.log({ allPossibleOffers });
+      console.log({ selectedOffers });
+      const offerInnerHtml = allPossibleOffers.map((offer)=>{
+        return `
+        <div class="event__offer-selector">
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${selectedOffers.some((item)=>{return item.title == offer.title}) ? `checked` : ``}>
+            <label class="event__offer-label" for="event-offer-luggage-1">
+              <span class="event__offer-title">${offer.title}</span>
+              &plus;
+              &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+            </label>
+          </div>
+          `;
+      }).join(
+        '\n'
+      )
+
        return ` <section class="event__details">
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
         <div class="event__available-offers">
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" checked>
-            <label class="event__offer-label" for="event-offer-luggage-1">
-              <span class="event__offer-title">Add luggage</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">30</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-            <label class="event__offer-label" for="event-offer-comfort-1">
-              <span class="event__offer-title">Switch to comfort class</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">100</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-meal-1" type="checkbox" name="event-offer-meal">
-            <label class="event__offer-label" for="event-offer-meal-1">
-              <span class="event__offer-title">Add meal</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">15</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-seats-1" type="checkbox" name="event-offer-seats">
-            <label class="event__offer-label" for="event-offer-seats-1">
-              <span class="event__offer-title">Choose seats</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">5</span>
-            </label>
-          </div>
-
-          <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-train-1" type="checkbox" name="event-offer-train">
-            <label class="event__offer-label" for="event-offer-train-1">
-              <span class="event__offer-title">Travel by train</span>
-              &plus;
-              &euro;&nbsp;<span class="event__offer-price">40</span>
-            </label>
-          </div>
+          ${offerInnerHtml}
         </div>
       </section>
     </section>`;
@@ -61,7 +44,6 @@ const generateDatalist = (cityArr) => {
     return `                 
         <option value="${city}"></option>`;              
   }).join(`\n`);
-  console.log(dataMarkup);
   return `<datalist id="destination-list-1">${dataMarkup}</datalist>`;
 }
 
@@ -189,7 +171,7 @@ export const createEditForm = (point) => {
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Cancel</button>
     </header>    
-    ${generateEventDetails()}
+    ${generateEventDetails(offers, type)}
   </form>`;
   
 };

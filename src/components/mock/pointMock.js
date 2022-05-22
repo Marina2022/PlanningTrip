@@ -1,13 +1,15 @@
-import { getRandomInt, getRandomArrayItem } from "../../utils/common"
-import { EVENT_TYPES, CITIES, TripDescriptions } from "../../consts";
+import {
+  getRandomInt,
+  getRandomArrayItem,
+  getShuffledArray,
+} from "../../utils/common";
+import {
+  EVENT_TYPES,
+  CITIES,
+  TripDescriptions,
+  EVENT_OFFERS,
+} from "../../consts";
 
-/**
- * для моков:
- * Точкой маршрута может быть остановка в каком-нибудь
-месте (Check, Sightseeing, Restaurant) или поездка на
-транспортном средстве
-(Taxi, Bus, Train, Ship, Transport, Drive и Flight).
- */
 
 const getRandomDesc = (descArr) => {
   const number = getRandomInt(1,5);
@@ -28,10 +30,27 @@ const getRandomPhotoArr = ()=> {
   return photoArr;
 }
 
+const generateOffers = (type)=>{
+  let initialArray = EVENT_OFFERS.find((item)=>{
+    return item.type === type;
+  });  
+  if (initialArray) { // если есть массив Офферов для данного типа 
+    let resultArr =[];
+    
+    let count = getRandomInt(0, initialArray.offers.length);
+    let shuffledArr = getShuffledArray(initialArray.offers);
+    
+    for (let i = 0; i<count; i++) {
+      resultArr.push(shuffledArr[i]);
+    }
+    return resultArr;
+  } else return [];
+}
 
 export const getPointMockArr = (count) => {
   const pointArr = [];
   for (let i = 0; i <count ; i++ ) {
+    const type =  getRandomArrayItem(EVENT_TYPES);
     const point = {
       base_price: getRandomInt(500, 3000),
       date_from: "2019-07-10T22:55:56.845Z",
@@ -43,20 +62,11 @@ export const getPointMockArr = (count) => {
       },
       id: 0,
       is_favorite: Math.random() > 0.5,
-      offers: [
-        {
-          title: "Choose meal",
-          price: 180,
-        },
-        {
-          title: "Upgrade to comfort class",
-          price: 50,
-        },
-      ],
-      type: getRandomArrayItem(EVENT_TYPES),
+      offers: generateOffers(type),
+      type: type,
     };
     pointArr.push(point);
   }
-  
+  console.log(pointArr);
   return pointArr;
 };
