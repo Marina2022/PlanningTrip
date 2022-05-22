@@ -1,3 +1,5 @@
+
+
 import {render} from "./components/render";
 import {
   createTripMain,
@@ -9,6 +11,31 @@ import {createMainFilters} from "./components/filter";
 import {createSortingForm} from "./components/sortingForm";
 import {createEditForm} from "./components/editForm";
 import {createTripDays, createTripEvent} from "./components/tripContent";
+import { getPointMockArr } from "./components/mock/pointMock";
+
+
+
+const TRIP_EVENT_COUNT = 10;
+
+const pointArr = getPointMockArr(TRIP_EVENT_COUNT);
+
+console.log(getPointMockArr(TRIP_EVENT_COUNT));
+
+/**
+ * Не удаляй пока, тут заголовки!
+ */
+// fetch("https://16.ecmascript.pages.academy/big-trip/offers", {
+//   headers: {
+//       'Content-Type': 'application/json',
+//       'AUTHORIZATION': 'Basic y2StXBzjFLjF18cFElf5tl5Hhxug7rjm',   
+//     }
+// })
+  // .then((response) => {
+  //   return response.json();
+  // })
+  // .then((data) => {
+  //   console.log(data);
+  // });
 
 const tripMainInfo = document.querySelector(`.trip-main`);
 render(tripMainInfo, createTripMain(), `afterBegin`);
@@ -25,10 +52,22 @@ render(tripControls, createMainFilters(), `beforeEnd`);
 
 const tripEvents = document.querySelector(`.trip-events`);
 render(tripEvents, createSortingForm(), `beforeEnd`);
-render(tripEvents, createEditForm(), `beforeEnd`);
-render(tripEvents, createTripDays(), `beforeEnd`);
 
+
+pointArr.slice(0,1).forEach((point) => {
+  render(tripEvents, createEditForm(point), `beforeEnd`);
+});
+
+render(tripEvents, createTripDays(), `beforeEnd`);
 const tripEventsList = document.querySelector(`.trip-events__list`);
-for (let i = 0; i < 3; i++) {
-  render(tripEventsList, createTripEvent(), `beforeEnd`);
-}
+
+pointArr.slice(1).forEach((point)=> {
+  render(
+    tripEventsList,
+    createTripEvent(point),
+    `beforeEnd`
+  );
+})
+
+const destInput = document.querySelector(".event__input--destination");
+destInput.addEventListener('focus', function(){this.value = ""})
