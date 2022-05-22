@@ -1,5 +1,6 @@
-import { getTime, getTimeDiff } from "../utils/date";
-import { EVENT_TYPES, EVENT_TYPES_TO, EVENT_TYPES_IN, MONTHS } from "../consts";
+import { getTime, getTimeDiff, getDateForDayNumber } from "../utils/date";
+import { EVENT_TYPES_TO, EVENT_TYPES_IN, MONTHS } from "../consts";
+import { render } from "../utils/common";
 
 const TRIP_EVENT_COUNT = 20;
 
@@ -8,7 +9,9 @@ const createTripDays = (daysCount, date) => {
   <li class="trip-days__item  day">
       <div class="day__info">
         <span class="day__counter">${daysCount}</span>
-        <time class="day__date" datetime="2019-03-19">${MONTHS[date.getMonth()]} ${date.getDate()}</time>              
+        <time class="day__date" datetime="${getDateForDayNumber(date)}">${
+          MONTHS[date.getMonth()]
+        } ${date.getDate()}</time>              
       </div>      
       <ul class="trip-events__list-${daysCount}">
       </ul>  
@@ -51,7 +54,7 @@ const createTripEvent = (pointObj) => {
         <li class="trip-events__item">
           <div class="event">
             <div class="event__type">
-              <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+              <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
             </div>
             <h3 class="event__title">${type} ${
     EVENT_TYPES_TO.includes(type)

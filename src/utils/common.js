@@ -14,3 +14,7 @@ const getShuffledArray = (arr) => {
 }
 
 export { getRandomInt, getRandomArrayItem, getShuffledArray };
+
+export const render = (container, template, place) => {
+  container.insertAdjacentHTML(place, template);
+};

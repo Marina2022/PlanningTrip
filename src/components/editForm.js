@@ -65,14 +65,16 @@ const generateEventDestinationInfo = (dest) => {
           </section>`;
 }
 
-const generateTypeList = (typeArr) => {
-  return typeArr.map(type => {
-    return ` <div class="event__type-item">
-            <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-              <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
+const createTypeListMarkup = (typeArr) => {
+  return typeArr
+    .map((type) => {
+      return ` <div class="event__type-item">
+            <input id="event-type-${type.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+              <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type}-1">${type}</label>
             </div>`;
-     }).join(`\n`);  
-  }
+    })
+    .join(`\n`);
+};
 
 export const createEditForm = (point) => {
     const {
@@ -97,11 +99,11 @@ export const createEditForm = (point) => {
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Transfer</legend>
-            ${generateTypeList(EVENT_TYPES_TO)}
+            ${createTypeListMarkup(EVENT_TYPES_TO)}
             </fieldset>
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Activity</legend>
-            ${generateTypeList(EVENT_TYPES_IN)}
+            ${createTypeListMarkup(EVENT_TYPES_IN)}
             </fieldset>
         </div>
       </div>
@@ -114,7 +116,7 @@ export const createEditForm = (point) => {
       : EVENT_TYPES_IN.includes(type)
       ? `in`
       : ``
-    }
+  }
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
           destination.name

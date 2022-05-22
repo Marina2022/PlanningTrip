@@ -1,6 +1,5 @@
 
 
-import {render} from "./components/render";
 import {
   createTripMain,
   createTripMainCost,
@@ -12,6 +11,7 @@ import {createSortingForm} from "./components/sortingForm";
 import {createEditForm} from "./components/editForm";
 import {createTripDays, createTripEvent} from "./components/tripContent";
 import { getPointMockArr } from "./components/mock/pointMock";
+import { render } from "./utils/common";
 
 
 
@@ -59,6 +59,7 @@ pointArr.slice(0,1).forEach((point) => {
 });
 
 // пошли рендерить список
+
 
 const startDate = pointArr[1].date_from.getDate(); // так-то надо бы с нулевой, но мы же первый элемет в едит-форм
 const endDate = pointArr[pointArr.length-1].date_from.getDate();
