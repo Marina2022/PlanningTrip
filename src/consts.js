@@ -139,7 +139,9 @@ export const EVENT_OFFERS = [
 export const CITIES = [
   `Amsterdam`,
   `New-York`,
-  `Moscow`,
+  `Tokio`,
+  `Vena`,
+  `London`,
   `Paris`,
   `Berlin`,
   `Saint-Petersburg`,

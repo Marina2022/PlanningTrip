@@ -11,7 +11,8 @@ const generateEventDetails = (selectedOffers, type) => {
       let allPossibleOffers = EVENT_OFFERS.find((item)=>{return item.type == type;});
       
       if (allPossibleOffers == undefined) return ``;  // значит, нет офферов на этот тип события
-      else allPossibleOffers = allPossibleOffers.offers;      
+      else allPossibleOffers = allPossibleOffers.offers;
+      
       const offerInnerHtml = allPossibleOffers.map((offer)=>{
         return `
         <div class="event__offer-selector">
