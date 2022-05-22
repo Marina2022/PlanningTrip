@@ -11,9 +11,7 @@ const generateEventDetails = (selectedOffers, type) => {
       let allPossibleOffers = EVENT_OFFERS.find((item)=>{return item.type == type;});
       
       if (allPossibleOffers == undefined) return ``;  // значит, нет офферов на этот тип события
-      else allPossibleOffers = allPossibleOffers.offers;
-      console.log({ allPossibleOffers });
-      console.log({ selectedOffers });
+      else allPossibleOffers = allPossibleOffers.offers;      
       const offerInnerHtml = allPossibleOffers.map((offer)=>{
         return `
         <div class="event__offer-selector">
@@ -29,14 +27,13 @@ const generateEventDetails = (selectedOffers, type) => {
         '\n'
       )
 
-       return ` <section class="event__details">
+       return ` 
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
           ${offerInnerHtml}
         </div>
-      </section>
-    </section>`;
+      </section>`;
 }
 
 const generateDatalist = (cityArr) => {
@@ -45,6 +42,32 @@ const generateDatalist = (cityArr) => {
         <option value="${city}"></option>`;              
   }).join(`\n`);
   return `<datalist id="destination-list-1">${dataMarkup}</datalist>`;
+}
+
+const generateEventDestinationInfo = (dest) => {
+  if (dest == null) return ``; // если город не заполнен, то посылаем объект с Дестинейшн = null
+/**
+ * интересно, а если введу город, что всю форму ввода перерисовать? тогда ведь надо Дестинейшн мокать по новой. 
+ * Или с сервера его грузить, как это будет, кстати? 
+ */
+
+
+  const { description, name, pictures } = dest;
+  return `              
+        <section class="event__section  event__section--destination">
+            <h3 class="event__section-title  event__section-title--destination">${name}</h3>
+            <p class="event__destination-description">${description}</p>
+
+            <div class="event__photos-container">
+              <div class="event__photos-tape">
+                ${pictures.map(pict => {
+                  return `
+                    <img class="event__photo" src="${pict.src}" alt="${pict.description}">
+                  `;
+                }).join(`\n`)}
+              </div>
+            </div>
+          </section>`;
 }
 
 export const createEditForm = (point) => {
@@ -171,7 +194,11 @@ export const createEditForm = (point) => {
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Cancel</button>
     </header>    
+    <section class="event__details">
     ${generateEventDetails(offers, type)}
+
+    ${generateEventDestinationInfo(destination)}
+    </section>
   </form>`;
   
 };

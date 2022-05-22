@@ -1,16 +1,16 @@
 import { getTime, getTimeDiff } from "../utils/date";
-import { EVENT_TYPES, EVENT_TYPES_TO, EVENT_TYPES_IN } from "../consts";
+import { EVENT_TYPES, EVENT_TYPES_TO, EVENT_TYPES_IN, MONTHS } from "../consts";
 
 const TRIP_EVENT_COUNT = 20;
 
-const createTripDays = () => {
+const createTripDays = (daysCount, date) => {
   return `<ul class="trip-days">
   <li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">1</span>
-        <time class="day__date" datetime="2019-03-19">MAR 19</time>              
+        <span class="day__counter">${daysCount}</span>
+        <time class="day__date" datetime="2019-03-19">${MONTHS[date.getMonth()]} ${date.getDate()}</time>              
       </div>      
-      <ul class="trip-events__list">
+      <ul class="trip-events__list-${daysCount}">
       </ul>  
   </li>
   </ul>
@@ -66,7 +66,7 @@ const createTripEvent = (pointObj) => {
                 <time class="event__start-time" datetime="
                 ${date_from}">${getTime(date_from)} </time>
                 &mdash;
-                <time class="event__end-time" datetime="${date_to}">16:05</time>
+                <time class="event__end-time" datetime="${date_to}">${getTime(date_to)}</time>
               </p>
               <p class="event__duration">${getTimeDiff(date_from, date_to)}</p>
             </div>

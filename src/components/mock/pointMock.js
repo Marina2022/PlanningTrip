@@ -13,13 +13,13 @@ import {
 
 const getRandomDesc = (descArr) => {
   const number = getRandomInt(1,5);
-  return descArr.reduce((acc,item)=>{
-    return acc + item
-  },'')
+  return getShuffledArray(descArr).slice(0, number).reduce((acc, item) => {
+    return acc + item;
+  }, "");
 }
 
 const getRandomPhotoArr = ()=> {
-  const number = getRandomInt(1, 5);
+  const number = getRandomInt(3, 6);
   const photoArr = [];
   for (let i = 0; i< number; i++) {
     photoArr.push({
@@ -47,14 +47,33 @@ const generateOffers = (type)=>{
   } else return [];
 }
 
+const generateDateObj = () => {
+  let now = new Date(Date.now());
+  const sign = Math.random > 0.5 ? 1 : -1;
+  const minutes = getRandomInt(0, 4320);
+  let dateFrom = Number(now.setMinutes(now.getMinutes() + minutes * sign));
+       const diff = getRandomInt(1000 * 60 * 30, 1000 * 60 * 60 * 25);
+  const dateTo = Number(dateFrom) + diff; 
+  const resultObj = {
+    dateFrom,
+    dateTo,
+  };
+  return JSON.parse(JSON.stringify(resultObj));
+  
+}
+
 export const getPointMockArr = (count) => {
+  
+  
+  
   const pointArr = [];
-  for (let i = 0; i <count ; i++ ) {
-    const type =  getRandomArrayItem(EVENT_TYPES);
+  for (let i = 0; i < count; i++) {
+    const { dateFrom, dateTo } = generateDateObj();
+    const type = getRandomArrayItem(EVENT_TYPES);
     const point = {
       base_price: getRandomInt(500, 3000),
-      date_from: "2019-07-10T22:55:56.845Z",
-      date_to: "2019-07-11T11:22:13.375Z",
+      date_from: new Date(dateFrom),
+      date_to: new Date(dateTo),
       destination: {
         description: getRandomDesc(TripDescriptions),
         name: getRandomArrayItem(CITIES),
@@ -67,6 +86,9 @@ export const getPointMockArr = (count) => {
     };
     pointArr.push(point);
   }
-  console.log(pointArr);
+  pointArr.sort((a, b) => {
+    return a.date_from - b.date_from;
+  });
+
   return pointArr;
 };

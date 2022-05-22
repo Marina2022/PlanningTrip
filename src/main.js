@@ -58,16 +58,25 @@ pointArr.slice(0,1).forEach((point) => {
   render(tripEvents, createEditForm(point), `beforeEnd`);
 });
 
-render(tripEvents, createTripDays(), `beforeEnd`);
-const tripEventsList = document.querySelector(`.trip-events__list`);
+// пошли рендерить список
 
-pointArr.slice(1).forEach((point)=> {
-  render(
-    tripEventsList,
-    createTripEvent(point),
-    `beforeEnd`
-  );
-})
+const startDate = pointArr[1].date_from.getDate(); // так-то надо бы с нулевой, но мы же первый элемет в едит-форм
+const endDate = pointArr[pointArr.length-1].date_from.getDate();
+
+let daysCount = 0;
+for (let i = startDate; i <= endDate; i++){
+  const dateArr = pointArr.slice(1).filter((item)=> item.date_from.getDate() == i);
+  if (dateArr.length ===0) continue;
+  daysCount++;
+  const dateForRender = dateArr[0].date_from; 
+  render(tripEvents, createTripDays(daysCount, dateForRender), `beforeEnd`);
+  const tripEventsList = document.querySelector(`.trip-events__list-${daysCount}`);
+
+  dateArr.forEach((point) => {
+    render(tripEventsList, createTripEvent(point), `beforeEnd`);
+  });
+}
+
 
 const destInput = document.querySelector(".event__input--destination");
 destInput.addEventListener('focus', function(){this.value = ""})

@@ -11,6 +11,8 @@ export const EVENT_TYPES = [
   "restaurant",
 ];
 
+export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug"];
+
 export const EVENT_TYPES_IN = [
   "check-in",
   "sightseeing",
