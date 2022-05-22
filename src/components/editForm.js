@@ -46,13 +46,7 @@ const generateDatalist = (cityArr) => {
 }
 
 const generateEventDestinationInfo = (dest) => {
-  if (dest == null) return ``; // если город не заполнен, то посылаем объект с Дестинейшн = null
-/**
- * интересно, а если введу город, что всю форму ввода перерисовать? тогда ведь надо Дестинейшн мокать по новой. 
- * Или с сервера его грузить, как это будет, кстати? 
- */
-
-
+  if (dest == null) return ``; 
   const { description, name, pictures } = dest;
   return `              
         <section class="event__section  event__section--destination">
@@ -70,6 +64,15 @@ const generateEventDestinationInfo = (dest) => {
             </div>
           </section>`;
 }
+
+const generateTypeList = (typeArr) => {
+  return typeArr.map(type => {
+    return ` <div class="event__type-item">
+            <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+              <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${type}</label>
+            </div>`;
+     }).join(`\n`);  
+  }
 
 export const createEditForm = (point) => {
     const {
@@ -94,61 +97,12 @@ export const createEditForm = (point) => {
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Transfer</legend>
-
-            <div class="event__type-item">
-              <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
-              <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus" checked>
-              <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
-              <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
-              <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-transport-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="transport">
-              <label class="event__type-label  event__type-label--transport" for="event-type-transport-1">Transport</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
-              <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight">
-              <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
-            </div>
-          </fieldset>
-
+            ${generateTypeList(EVENT_TYPES_TO)}
+            </fieldset>
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Activity</legend>
-
-            <div class="event__type-item">
-              <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
-              <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
-              <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
-            </div>
-
-            <div class="event__type-item">
-              <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
-              <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
-            </div>
-          </fieldset>
+            ${generateTypeList(EVENT_TYPES_IN)}
+            </fieldset>
         </div>
       </div>
 
@@ -160,7 +114,7 @@ export const createEditForm = (point) => {
       : EVENT_TYPES_IN.includes(type)
       ? `in`
       : ``
-  }
+    }
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
           destination.name
@@ -191,15 +145,12 @@ export const createEditForm = (point) => {
         </label>
         <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${base_price}">
       </div>
-
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Cancel</button>
     </header>    
     <section class="event__details">
     ${generateEventDetails(offers, type)}
-
     ${generateEventDestinationInfo(destination)}
     </section>
-  </form>`;
-  
+  </form>`;  
 };
