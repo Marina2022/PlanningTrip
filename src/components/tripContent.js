@@ -2,9 +2,33 @@ import { getTime, getTimeDiff, getDateForDayNumber } from "../utils/date";
 import { EVENT_TYPES_TO, EVENT_TYPES_IN, MONTHS } from "../consts";
 import { render } from "../utils/common";
 
-const TRIP_EVENT_COUNT = 20;
+const tripEvents = document.querySelector(`.trip-events`);
 
-const createTripDays = (daysCount, date) => {
+const createTripDays = (pointArr) => {
+  const startDate = pointArr[1].date_from.getDate(); 
+  // так-то надо бы с нулевой, но мы же первый элемет в едит-форм
+  
+  const dateArray = pointArr.map(item=>{return item.date_from.getDate()});
+  let filteredDates = [...new Set(dateArray)];
+  
+  for (let i = 0; i < filteredDates.length; i++) {    
+    const dateArr = pointArr.filter((item) => {
+        return item.date_from.getDate() == filteredDates[i]
+      }
+    );    
+    const dateForRender = dateArr[0].date_from;    
+    render(tripEvents, createTripDaysMarkup(i+1, dateForRender), `beforeEnd`);
+
+    const tripEventsLists = document.querySelectorAll(
+       `.trip-events__list-1`);    
+
+    dateArr.forEach((point) => {
+      render(tripEventsLists[i], createTripEvent(point), `beforeEnd`);
+    });
+  }
+};
+
+const createTripDaysMarkup = (daysCount, date) => {
   return `<ul class="trip-days">
   <li class="trip-days__item  day">
       <div class="day__info">
@@ -13,7 +37,7 @@ const createTripDays = (daysCount, date) => {
           MONTHS[date.getMonth()]
         } ${date.getDate()}</time>              
       </div>      
-      <ul class="trip-events__list-${daysCount}">
+      <ul class="trip-events__list-1">
       </ul>  
   </li>
   </ul>
@@ -63,7 +87,6 @@ const createTripEvent = (pointObj) => {
       ? `in`
       : ``
   } ${destination.name}</h3>
-
             <div class="event__schedule">
               <p class="event__time">
                 <time class="event__start-time" datetime="

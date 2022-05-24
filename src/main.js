@@ -15,7 +15,7 @@ import { render } from "./utils/common";
 
 
 
-const TRIP_EVENT_COUNT = 10;
+const TRIP_EVENT_COUNT = 20;
 
 const pointArr = getPointMockArr(TRIP_EVENT_COUNT);
 
@@ -60,24 +60,7 @@ pointArr.slice(0,1).forEach((point) => {
 
 // пошли рендерить список
 
-
-const startDate = pointArr[1].date_from.getDate(); // так-то надо бы с нулевой, но мы же первый элемет в едит-форм
-const endDate = pointArr[pointArr.length-1].date_from.getDate();
-
-let daysCount = 0;
-for (let i = startDate; i <= endDate; i++){
-  const dateArr = pointArr.slice(1).filter((item)=> item.date_from.getDate() == i);
-  if (dateArr.length ===0) continue;
-  daysCount++;
-  const dateForRender = dateArr[0].date_from; 
-  render(tripEvents, createTripDays(daysCount, dateForRender), `beforeEnd`);
-  const tripEventsList = document.querySelector(`.trip-events__list-${daysCount}`);
-
-  dateArr.forEach((point) => {
-    render(tripEventsList, createTripEvent(point), `beforeEnd`);
-  });
-}
-
+createTripDays(pointArr.slice(1));
 
 const destInput = document.querySelector(".event__input--destination");
 destInput.addEventListener('focus', function(){this.value = ""})
