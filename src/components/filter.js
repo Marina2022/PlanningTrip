@@ -1,3 +1,5 @@
+import { createElement } from "../utils/common";
+
 export const createMainFilters = () => {
   return `
   <h2 class="visually-hidden">Filter events</h2>
@@ -22,3 +24,25 @@ export const createMainFilters = () => {
 
   `;
 };
+
+
+
+export class Filters {
+  constructor() {
+    this._elem = null;
+  }
+  getTemplate() {
+    return createMainFilters();
+  }
+
+  getElem() {
+    if (!this._elem) {
+      this._elem = createElement(this.getTemplate());
+    }
+    console.log(this._elem);
+    return this._elem;
+  }
+  removeElem() {
+    this._elem = null;
+  }
+}

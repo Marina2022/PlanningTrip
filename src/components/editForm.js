@@ -1,3 +1,5 @@
+import { createElement } from "../utils/common";
+
 import {
   EVENT_TYPES_TO,
   EVENT_TYPES,
@@ -8,15 +10,25 @@ import {
 import { getDate, getTime } from "../utils/date";
 
 const generateEventDetails = (selectedOffers, type) => {
-      let allPossibleOffers = EVENT_OFFERS.find((item)=>{return item.type == type;});
-      
-      if (allPossibleOffers == undefined) return ``;  // значит, нет офферов на этот тип события
-      else allPossibleOffers = allPossibleOffers.offers;
-      
-      const offerInnerHtml = allPossibleOffers.map((offer)=>{
-        return `
+  let allPossibleOffers = EVENT_OFFERS.find((item) => {
+    return item.type == type;
+  });
+
+  if (allPossibleOffers == undefined)
+    return ``; // значит, нет офферов на этот тип события
+  else allPossibleOffers = allPossibleOffers.offers;
+
+  const offerInnerHtml = allPossibleOffers
+    .map((offer) => {
+      return `
         <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${selectedOffers.some((item)=>{return item.title == offer.title}) ? `checked` : ``}>
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${
+              selectedOffers.some((item) => {
+                return item.title == offer.title;
+              })
+                ? `checked`
+                : ``
+            }>
             <label class="event__offer-label" for="event-offer-luggage-1">
               <span class="event__offer-title">${offer.title}</span>
               &plus;
@@ -24,29 +36,30 @@ const generateEventDetails = (selectedOffers, type) => {
             </label>
           </div>
           `;
-      }).join(
-        '\n'
-      )
+    })
+    .join("\n");
 
-       return ` 
+  return ` 
       <section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
           ${offerInnerHtml}
         </div>
       </section>`;
-}
+};
 
 const generateDatalist = (cityArr) => {
-  let dataMarkup = cityArr.map(city => {
-    return `                 
-        <option value="${city}"></option>`;              
-  }).join(`\n`);
+  let dataMarkup = cityArr
+    .map((city) => {
+      return `                 
+        <option value="${city}"></option>`;
+    })
+    .join(`\n`);
   return `<datalist id="destination-list-1">${dataMarkup}</datalist>`;
-}
+};
 
 const generateEventDestinationInfo = (dest) => {
-  if (dest == null) return ``; 
+  if (dest == null) return ``;
   const { description, name, pictures } = dest;
   return `              
         <section class="event__section  event__section--destination">
@@ -55,15 +68,17 @@ const generateEventDestinationInfo = (dest) => {
 
             <div class="event__photos-container">
               <div class="event__photos-tape">
-                ${pictures.map(pict => {
-                  return `
+                ${pictures
+                  .map((pict) => {
+                    return `
                     <img class="event__photo" src="${pict.src}" alt="${pict.description}">
                   `;
-                }).join(`\n`)}
+                  })
+                  .join(`\n`)}
               </div>
             </div>
           </section>`;
-}
+};
 
 const createTypeListMarkup = (typeArr) => {
   return typeArr
@@ -76,16 +91,16 @@ const createTypeListMarkup = (typeArr) => {
     .join(`\n`);
 };
 
-export const createEditForm = (point) => {
-    const {
-      base_price,
-      date_from,
-      date_to,
-      destination,
-      is_favorite,
-      offers,
-      type,
-    } = point;
+const createEditForm = (point) => {
+  const {
+    base_price,
+    date_from,
+    date_to,
+    destination,
+    is_favorite,
+    offers,
+    type,
+  } = point;
   return `
   <form class="trip-events__item  event  event--edit" action="#" method="post">
     <header class="event__header">
@@ -154,5 +169,26 @@ export const createEditForm = (point) => {
     ${generateEventDetails(offers, type)}
     ${generateEventDestinationInfo(destination)}
     </section>
-  </form>`;  
+  </form>`;
 };
+
+export class EditPoint {
+  constructor(point) {
+    this.point = point
+    this._elem = null;
+  }
+  getTemplate() {
+    return createEditForm(this.point);
+  }
+
+  getElem() {
+    if (!this._elem) {
+      this._elem = createElement(this.getTemplate());
+    }
+    console.log(this._elem);
+    return this._elem;
+  }
+  removeElem() {
+    this._elem = null;
+  }
+}

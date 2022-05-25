@@ -1,3 +1,9 @@
+export const createElement = (template)=> {
+  const div = document.createElement('div');
+  div.innerHTML = template;
+  return div.firstElementChild;
+}
+
 const getRandomInt = (min,max) => {
   return Math.floor(Math.random()*(max-min))+min;
 }
@@ -15,6 +21,6 @@ const getShuffledArray = (arr) => {
 
 export { getRandomInt, getRandomArrayItem, getShuffledArray };
 
-export const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
+export const render = (container, elem, place) => {
+  container.insertAdjacentElement(place, elem);
 };
