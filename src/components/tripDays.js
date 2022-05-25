@@ -3,7 +3,6 @@ import { MONTHS } from "../consts";
 import { createElement } from "../utils/common";
 
 const createTripDayMarkup = (daysCount, date) => {
-  console.log({ daysCount });
   return `<ul class="trip-days">
   <li class="trip-days__item  day">
       <div class="day__info">
@@ -33,7 +32,6 @@ export class tripDay {
     if (!this._elem) {
       this._elem = createElement(this.getTemplate());
     }
-    console.log(this._elem);
     return this._elem;
   }
   removeElem() {

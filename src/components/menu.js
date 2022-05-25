@@ -22,7 +22,6 @@ export class Menu {
     if (!this._elem) {
       this._elem = createElement(this.getTemplate());
     }
-    console.log(this._elem);
     return this._elem;
   }
   removeElem() {
