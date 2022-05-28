@@ -5,7 +5,7 @@ const createTripMain = () => {
           </section>`;
 };
 
-export class TripMainHeader extends AbstractComponent {  
+export class TripMain extends AbstractComponent {
   getTemplate() {
     return createTripMain();
   }

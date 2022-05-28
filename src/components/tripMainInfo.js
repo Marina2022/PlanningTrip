@@ -8,7 +8,7 @@ const createTripMainInfo = () => {
             </div>`;
 };
 
-export class TripMainHeaderInfo extends AbstractComponent {
+export class TripMainInfo extends AbstractComponent {
   getTemplate() {
     return createTripMainInfo();
   }

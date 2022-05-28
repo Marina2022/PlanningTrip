@@ -6,7 +6,7 @@ const createTripMainCost = () => {
            </p>`;
 };
 
-export class TripMainHeaderCost extends AbstractComponent {  
+export class TripMainCost extends AbstractComponent {
   getTemplate() {
     return createTripMainCost();
   }

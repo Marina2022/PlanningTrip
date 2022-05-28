@@ -1,21 +1,22 @@
-
-import { TripMainHeader } from "./components/tripMain";
-import { TripMainHeaderInfo } from "./components/tripMainInfo";
-import { TripMainHeaderCost } from "./components/tripMainCost";
-
-
+import { TripMain } from "./components/tripMain";
+import { TripMainInfo } from "./components/tripMainInfo";
+import { TripMainCost } from "./components/tripMainCost";
 import { Menu } from "./components/menu";
 import { Filters } from "./components/filter";
+
+
 import { SortingForm } from "./components/sortingForm";
 import { TripEvent } from "./components/tripEvent";
-import { getPointMockArr } from "./components/mock/pointMock";
-import { render, replace } from "./utils/render";
 import { tripDay } from "./components/tripDay";
 import { EditPoint } from "./components/editForm";
 import { NoEvents } from "./components/noEventsMsg";
+import { NewEventBtn } from "./components/newEventBtn";
+
+import { getPointMockArr } from "./components/mock/pointMock";
+import { render, replace } from "./utils/render";
 
 
-const TRIP_EVENT_COUNT = 20;
+const TRIP_EVENT_COUNT = 0;
 
 const pointArr = getPointMockArr(TRIP_EVENT_COUNT);
 
@@ -73,14 +74,15 @@ const pointArr = getPointMockArr(TRIP_EVENT_COUNT);
     }
   };
 
-const tripMainElem = document.querySelector(`.trip-main`);
-render(tripMainElem, new TripMainHeader(), `afterBegin`);
+const tripMain = document.querySelector(`.trip-main`);
+render(tripMain, new TripMain(), `afterBegin`);
+render(tripMain, new NewEventBtn(), `beforeEnd`);
 
 // tripMainInfoCont - контейнер для названия и цены в хедере
-const tripMainInfoCont = document.querySelector(`.trip-info`);
+const tripMainContainer = document.querySelector(`.trip-info`);
 
-render(tripMainInfoCont, new TripMainHeaderCost(), `afterBegin`);
-render(tripMainInfoCont, new TripMainHeaderInfo(), `afterBegin`);
+render(tripMainContainer, new TripMainCost(), `afterBegin`);
+render(tripMainContainer, new TripMainInfo(), `afterBegin`);
 
 const tripControls = document.querySelector(`.trip-controls`);
 tripControls.innerHTML = ``;
@@ -88,10 +90,14 @@ tripControls.innerHTML = ``;
 render(tripControls, new Menu(), `beforeEnd`);
 render(tripControls, new Filters(), `beforeEnd`);
 
-const tripEvents = document.querySelector(`.trip-events`);
-render(tripEvents, new SortingForm(), `beforeEnd`);
 
-renderTripDays(pointArr);
+const tripEvents = document.querySelector(`.trip-events`);
+if (pointArr.length === 0) {
+  render(tripEvents, new NoEvents(), `beforeEnd`);
+} else {
+  render(tripEvents, new SortingForm(), `beforeEnd`);
+  renderTripDays(pointArr);
+}
 
 
 
