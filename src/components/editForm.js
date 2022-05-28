@@ -175,9 +175,19 @@ const createEditForm = (point) => {
 export class EditPoint extends AbstractComponent {
   constructor(point) {
     super();
-    this.point = point    
+    this.point = point;
   }
   getTemplate() {
     return createEditForm(this.point);
+  }
+  setBtnHandlers(cb) {    
+    this.getElem().addEventListener('submit', (e) => {
+      console.log(e.preventDefault);
+      
+      e.preventDefault();
+      cb(); 
+    })  
+    const cancelBtn = this.getElem().querySelector(`.event__reset-btn`);
+    cancelBtn.addEventListener('click', cb);
   }
 }

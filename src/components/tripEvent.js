@@ -72,9 +72,16 @@ const createTripEvent = (pointObj) => {
 export class TripEvent extends AbstractComponent {
   constructor(point) {
     super();
-    this.point = point;    
+    this.point = point;
   }
   getTemplate() {
     return createTripEvent(this.point);
+  }
+
+  setEditBtnHandler(cb) {
+    const btn = this.getElem().querySelector(`.event__rollup-btn`)
+    btn.addEventListener("click", (e)=>{
+      cb(e)
+    });
   }
 }

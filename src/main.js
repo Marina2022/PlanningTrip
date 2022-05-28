@@ -30,37 +30,26 @@ const pointArr = getPointMockArr(TRIP_EVENT_COUNT);
 
     const onEsc = (e) => {
       if (e.keyCode ===27) {
-        //tripEventsList.replaceChild(pointCard, pointEdit);
         replace(pointCard, pointEdit);
         destInput.removeEventListener("focus", onInputFocus);
         document.removeEventListener("keyup", onEsc);
       }
     }
     const onOpenBtnClick = () => {
-      tripEventsList.replaceChild(pointEdit, pointCard);
-
-      const destInput = document.querySelector(".event__input--destination");
+      replace(pointEdit, pointCard);
+      const destInput = pointEdit
+        .getElem()
+        .querySelector(".event__input--destination");
       destInput.addEventListener("focus", onInputFocus);
-
       document.addEventListener('keyup', onEsc);
-
-
     }
-    const onCloseClick = (e) => {  
-        if (e.target == pointEdit) e.preventDefault();
-        tripEventsList.replaceChild(pointCard, pointEdit);
+
+    const onCloseClick = () => {  
+        replace(pointCard, pointEdit);
         destInput.removeEventListener("focus", onInputFocus);
     };
-
-    const openBtn = pointCard.getElem().querySelector(`.event__rollup-btn`);
-    openBtn.addEventListener('click', onOpenBtnClick)
-
-    const cancelBtn = pointEdit.getElem().querySelector(`.event__reset-btn`);
-    cancelBtn.addEventListener("click", onCloseClick);
-    
-    pointEdit.getElem().addEventListener("submit", onCloseClick);
-
-    
+    pointCard.setEditBtnHandler(onOpenBtnClick);
+    pointEdit.setBtnHandlers(onCloseClick);    
 
     render(tripEventsList, pointCard, `beforeEnd`);
   }

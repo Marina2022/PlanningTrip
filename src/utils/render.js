@@ -8,14 +8,12 @@ export const render = (container, component, place) => {
   container.insertAdjacentElement(place, component.getElem());
 };
 
-export const replace = (pointCard, pointEdit)=> {  
-  const pointCartEl = pointCard.getElem()
-  const editCartEl = pointEdit.getElem()
+export const replace = (pointEdit, pointCard) => {
+  const pointCartEl = pointCard.getElem();
+  const editCartEl = pointEdit.getElem();
   const parentEl = pointCartEl.parentElement;
-
   const isExisting = !!(pointCartEl && editCartEl && parentEl);
-  if (isExisting && parentEl.contains(editCartEl)){
-    parentEl.replaceChild(pointCartEl, editCartEl);
-  }
+  if (isExisting) parentEl.replaceChild(editCartEl, pointCartEl);
+};
 
-}
+
