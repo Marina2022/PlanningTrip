@@ -1,6 +1,6 @@
 import { getDateForDayNumber } from "../utils/date";
 import { MONTHS } from "../consts";
-import { createElement } from "../utils/common";
+import { AbstractComponent } from "./abstractComponent";
 
 const createTripDayMarkup = (daysCount, date) => {
   return `<ul class="trip-days">
@@ -18,25 +18,14 @@ const createTripDayMarkup = (daysCount, date) => {
  `;
 };
 
-export class tripDay {
+export class tripDay extends AbstractComponent {
   constructor(daysCount, date) {
-    this._elem = null;
+    super();    
     this.daysCount = daysCount;
     this.date = date;
   }
   getTemplate() {
     return createTripDayMarkup(this.daysCount, this.date);
   }
-
-  getElem() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-    return this._elem;
-  }
-  removeElem() {
-    this._elem = null;
-  }
 }
 
-// вот это надо либо обратно в Мейн возвращать, либо не наю че - наверное, обратно. В чем смысл всего?

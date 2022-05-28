@@ -1,4 +1,4 @@
-import { createElement } from "../utils/common";
+import { AbstractComponent } from "./abstractComponent";
 
 import {
   EVENT_TYPES_TO,
@@ -172,22 +172,12 @@ const createEditForm = (point) => {
   </form>`;
 };
 
-export class EditPoint {
+export class EditPoint extends AbstractComponent {
   constructor(point) {
-    this.point = point
-    this._elem = null;
+    super();
+    this.point = point    
   }
   getTemplate() {
     return createEditForm(this.point);
-  }
-
-  getElem() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-    return this._elem;
-  }
-  removeElem() {
-    this._elem = null;
   }
 }

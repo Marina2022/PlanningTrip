@@ -1,5 +1,4 @@
-import { createElement } from "../utils/common";
-
+import { AbstractComponent } from "./abstractComponent";
 
 export const createSortingForm = () => {
   return `
@@ -29,25 +28,9 @@ export const createSortingForm = () => {
     </form>`;
 };
 
-
-export class SortingForm {
-  constructor() {
-    this._elem = null;
-  }
+export class SortingForm extends AbstractComponent {
+  
   getTemplate() {
     return createSortingForm();
   }
-
-  getElem() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-    return this._elem;
-  }
-  removeElem() {
-    this._elem = null;
-  }
 }
-
-
-

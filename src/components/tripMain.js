@@ -1,28 +1,12 @@
-import {createElement} from "../utils/common"
+import { AbstractComponent } from "./abstractComponent";
 
 const createTripMain = () => {
   return `  <section class="trip-main__trip-info  trip-info">            
           </section>`;
 };
 
-
-export class TripMainHeader {
-  constructor(){
-    this._elem = null;
-  }
-  getTemplate(){
+export class TripMainHeader extends AbstractComponent {  
+  getTemplate() {
     return createTripMain();
   }
-
-  getElem() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-    return this._elem;
-  }
-  removeElem() {
-    this._elem = null;
-  }
 }
-
-

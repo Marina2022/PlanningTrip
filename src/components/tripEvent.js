@@ -1,7 +1,6 @@
-import { createElement } from "../utils/common";
+import { AbstractComponent } from "./abstractComponent";
 import { getTime, getTimeDiff } from "../utils/date";
 import { EVENT_TYPES_TO, EVENT_TYPES_IN } from "../consts";
-
 
 const generateOffers = (offers) => {
   let i = 0;
@@ -49,7 +48,9 @@ const createTripEvent = (pointObj) => {
                 <time class="event__start-time" datetime="
                 ${date_from}">${getTime(date_from)} </time>
                 &mdash;
-                <time class="event__end-time" datetime="${date_to}">${getTime(date_to)}</time>
+                <time class="event__end-time" datetime="${date_to}">${getTime(
+    date_to
+  )}</time>
               </p>
               <p class="event__duration">${getTimeDiff(date_from, date_to)}</p>
             </div>
@@ -68,22 +69,12 @@ const createTripEvent = (pointObj) => {
 `;
 };
 
-export class TripEvent {
+export class TripEvent extends AbstractComponent {
   constructor(point) {
-    this.point = point
-    this._elem = null;
+    super();
+    this.point = point;    
   }
   getTemplate() {
     return createTripEvent(this.point);
-  }
-
-  getElem() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-    return this._elem;
-  }
-  removeElem() {
-    this._elem = null;
   }
 }
