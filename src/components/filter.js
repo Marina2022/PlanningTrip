@@ -1,6 +1,6 @@
 import { AbstractComponent } from "./abstractComponent";
 
-export const createMainFilters = () => {
+const createMainFilters = () => {
   return `
   <div>
   <h2 class="visually-hidden">Filter events</h2>

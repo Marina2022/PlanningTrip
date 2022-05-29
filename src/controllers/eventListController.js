@@ -56,25 +56,35 @@ const renderTripDays = (pointArr, tripEvents) => {
     render(tripEvents, new tripDay(i + 1, dateForRender), `beforeEnd`);
     const tripEventsLists = document.querySelectorAll(`.trip-events__list-1`);
     dateArr.forEach((point) => {
-      renderTripPoint(tripEventsLists[i], point, i);
+      renderTripPoint(tripEventsLists[i], point);
     });
   }
 };
 
 const TRIP_EVENT_COUNT = 20;
-
 const pointArr = getPointMockArr(TRIP_EVENT_COUNT);
-
-
 export class EventListController {
-  constructor() {}
+  constructor() {
+    this._container = document.querySelector(`.trip-events`);
+  }
 
   render() {
-    const tripEvents = document.querySelector(`.trip-events`);
+    const tripEvents = this._container;
     if (pointArr.length === 0) {
       render(tripEvents, new NoEvents(), `beforeEnd`);
     } else {
-      render(tripEvents, new SortingForm(), `beforeEnd`);
+      const sortingForm = new SortingForm();      
+
+
+      render(tripEvents, sortingForm, `beforeEnd`);
+
+      sortingForm.setSortClickHandler((sortType)=>{
+
+        //const sortedPoints = getSortedPoints(sortType);
+            sortedPoints.forEach((point) => {
+              renderTripPoint(tripEventsLists[i], point);
+            });
+      });
       renderTripDays(pointArr, tripEvents);
     }
   }
