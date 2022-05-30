@@ -12,12 +12,12 @@ const createSortingForm = () => {
       <span class="trip-sort__item  trip-sort__item--day"></span>
 
       <div class="trip-sort__item  trip-sort__item--event">
-        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event">
+        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event" checked>
         <label class="trip-sort__btn" for="sort-event" data-sort-type="event">Event</label>
       </div>
 
       <div class="trip-sort__item  trip-sort__item--time">
-        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time" checked>
+        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
         <label class="trip-sort__btn  trip-sort__btn--active  trip-sort__btn--by-increase" data-sort-type="time" for="sort-time">
           Time
         </label>
@@ -37,7 +37,7 @@ const createSortingForm = () => {
 export class SortingForm extends AbstractComponent {
   constructor(){
     super();
-    this.sortType = sortTypes.TIME;
+    this.sortType = sortTypes.EVENT;
   }
   getTemplate() {
     return createSortingForm();
