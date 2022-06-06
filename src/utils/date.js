@@ -33,7 +33,7 @@ export const getTime = (date) => {
 
 export const getTimeDiff = (dateFrom, dateTo) => {
   const diff = (dateTo - dateFrom) / 1000 / 60; // в минутах разница
-  if (diff < 60) return `M${th.trunc(diff)}`;
+  if (diff < 60) return `M${Math.trunc(diff)}`;
 
   if (diff < 60 * 24) {
     let hours = Math.trunc(diff / 60);

@@ -4,7 +4,7 @@ import { TripMainCost } from "./components/tripMainCost";
 import { Menu } from "./components/menu";
 import { Filters } from "./components/filter";
 import { NewEventBtn } from "./components/newEventBtn";
-import { EventListController } from "./controllers/eventListController";
+import { TripController } from "./controllers/tripController";
 import { render } from "./utils/render";
 
 
@@ -24,8 +24,8 @@ tripControls.innerHTML = ``;
 render(tripControls, new Menu(), `beforeEnd`);
 render(tripControls, new Filters(), `beforeEnd`);
 
-const eventListController = new EventListController();
-eventListController.render();
+const tripController = new TripController();
+tripController.render();
 
 
 
