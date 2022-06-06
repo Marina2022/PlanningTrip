@@ -79,9 +79,10 @@ export class TripEvent extends AbstractComponent {
   }
 
   setEditBtnHandler(cb) {
-    const btn = this.getElem().querySelector(`.event__rollup-btn`)
-    btn.addEventListener("click", (e)=>{
-      cb(e)
+    const btn = this.getElem().querySelector(`.event__rollup-btn`);
+    btn.addEventListener("click", (e) => {
+      cb(e);
     });
   }
+
 }

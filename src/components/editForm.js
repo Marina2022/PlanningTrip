@@ -2,12 +2,12 @@ import { AbstractComponent } from "./abstractComponent";
 
 import {
   EVENT_TYPES_TO,
-  EVENT_TYPES,
   EVENT_TYPES_IN,
   CITIES,
   EVENT_OFFERS,
 } from "../consts";
 import { getDate, getTime } from "../utils/date";
+import { replace } from "../utils/render";
 
 const generateEventDetails = (selectedOffers, type) => {
   let allPossibleOffers = EVENT_OFFERS.find((item) => {
@@ -164,6 +164,21 @@ const createEditForm = (point) => {
       </div>
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Cancel</button>
+
+      <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${is_favorite ? `checked` : ``}>
+      <label class="event__favorite-btn" for="event-favorite-1">
+        <span class="visually-hidden">Add to favorite</span>
+        <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
+          <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
+        </svg>
+      </label>
+
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>
+          
+    
+
     </header>    
     <section class="event__details">
     ${generateEventDetails(offers, type)}
@@ -176,6 +191,7 @@ export class EditPoint extends AbstractComponent {
   constructor(point) {
     super();
     this.point = point;
+    this.setFavoriteHandler = this.setFavoriteHandler.bind(this);
   }
   getTemplate() {
     return createEditForm(this.point);
@@ -189,5 +205,20 @@ export class EditPoint extends AbstractComponent {
     })  
     const cancelBtn = this.getElem().querySelector(`.event__reset-btn`);
     cancelBtn.addEventListener('click', cb);
+
+    const rollupBtn = this.getElem().querySelector(`.event__rollup-btn`);
+    rollupBtn.addEventListener('click', cb);
+  }
+
+  setFavoriteHandler(cb, pointController) {
+    this.getElem()
+      .querySelector(`.event__favorite-checkbox`)
+      .addEventListener("change", ()=>{
+        const newPoint = Object.assign({}, this.point, { is_favorite: !this.point.is_favorite });
+        cb(this.point, newPoint); 
+        pointController.render(newPoint);
+
+        
+      });
   }
 }
