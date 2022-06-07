@@ -64,8 +64,6 @@ const generateDateObj = () => {
 
 export const getPointMockArr = (count) => {
   
-  
-  
   const pointArr = [];
   for (let i = 0; i < count; i++) {
     const { dateFrom, dateTo } = generateDateObj();
@@ -92,3 +90,15 @@ export const getPointMockArr = (count) => {
 
   return pointArr;
 };
+
+export const getDestinations = () => {
+  const result =  CITIES.map(city => {
+    return {
+        description: getRandomDesc(TripDescriptions),
+        pictures: getRandomPhotoArr(),
+        name: city,
+      }    
+ });
+ return result;
+
+}
