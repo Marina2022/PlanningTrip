@@ -15,6 +15,8 @@ export class TripController {
     this._sortingForm = new SortingForm();
     this.pointArr = getPointMockArr(TRIP_EVENT_COUNT);
     this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
+    this._pointControllers = [];
   }
 
   render() {
@@ -37,10 +39,13 @@ export class TripController {
         render(tripEvents, new tripDay("", ""), `beforeEnd`);
         const tripEventsList = document.querySelector(`.trip-events__list-1`);
         sortedPoints.forEach((point) => {
-          new PointController(
-            tripEventsList,           
-            this._onDataChange
-          ).render(point);
+          const pointContr = new PointController(
+            tripEventsList,
+            this._onDataChange,
+            this._onViewChange
+          );          
+          pointContr.render(point);
+          this._pointControllers.push(pointContr);
         });
       });
 
@@ -49,6 +54,7 @@ export class TripController {
   }
 
   renderTripDays(points, tripEvents) {
+    this._pointControllers = [];
     let filteredDates = [
       ...new Set(points.map((item) => item.date_from.toDateString())),
     ];
@@ -61,9 +67,13 @@ export class TripController {
       render(tripEvents, new tripDay(i + 1, dateForRender), `beforeEnd`);
       const tripEventsLists = document.querySelectorAll(`.trip-events__list-1`);
       dateArr.forEach((point) => {
-        new PointController(tripEventsLists[i], this._onDataChange).render(
-          point
+        const pointContr = new PointController(
+          tripEventsLists[i],
+          this._onDataChange,
+          this._onViewChange
         );
+        pointContr.render(point);
+        this._pointControllers.push(pointContr);
       });
     }
   }
@@ -74,6 +84,14 @@ export class TripController {
       .concat(this.pointArr.slice(0, index))
       .concat(newPoint)
       .concat(this.pointArr.slice(index));            
+  }
+
+  _onViewChange = (currentController) => {    
+    this._pointControllers.forEach(pointContr=>{
+      if (pointContr !== currentController) {
+        pointContr.setDefaultView();
+      }
+    })
   }
 
   getSortedPoints = (sortType) => {

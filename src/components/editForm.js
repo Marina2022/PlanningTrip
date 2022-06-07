@@ -97,12 +97,18 @@ export class EditPoint extends AbstractSmartComponent {
     this.point = point;
     this.setFavoriteHandler = this.setFavoriteHandler.bind(this);
     this._cb = null;
+    this._BtnHandlersCb = null;
     this._pointController = null;
     this._destInput = null;
     this._eventType = this.point.type;
     this._destination = this.point.destination    
   }
 
+  resetForm = ()=> {        
+    this._eventType = this.point.type;    
+    this._destination = this.point.destination;   
+    this.rerender();
+  }
   getTemplate() {
     return this.createEditForm(this.point);
   }
@@ -199,26 +205,34 @@ export class EditPoint extends AbstractSmartComponent {
   };
 
   recoveryListeners() {
-    this.setBtnHandlers(this._cb);
+    this.setBtnHandlers(this._BtnHandlersCb);
+    
     this.setFavoriteHandler(this._cb, this._pointController);
     this.setEventTypeHandler();
     this.setCityChangeHandler();
   }
 
   setBtnHandlers(cb) {
-    this._cb = cb;
+    this._BtnHandlersCb = cb;
 
-    this.getElem().addEventListener("submit", (e) => {
-      console.log(e.preventDefault);
-
+    this.getElem().addEventListener("submit", (e) => {      
       e.preventDefault();
+      this.resetForm();
       cb();
     });
     const cancelBtn = this.getElem().querySelector(`.event__reset-btn`);
-    cancelBtn.addEventListener("click", cb);
+    cancelBtn.addEventListener("click", ()=>{      
+      this.resetForm();
+      cb();
+      
+    });
 
     const rollupBtn = this.getElem().querySelector(`.event__rollup-btn`);
-    rollupBtn.addEventListener("click", cb);
+    rollupBtn.addEventListener("click", ()=> {      
+      this.resetForm();
+      cb();
+      
+    });
     this._destInput = this.getElem().querySelector(
       ".event__input--destination"
     );
@@ -260,15 +274,10 @@ export class EditPoint extends AbstractSmartComponent {
       `.event__input--destination`
     );
     cityInput.addEventListener(`change`, (e) => {
-      console.log("here");
       const cityName = e.target.value;
-      //this.destination.name = cityName;
       const dests = getDestinations();
-      const myDestIndex = dests.findIndex((it) => it.name === cityName);
-
-      
-      this._destination = dests[myDestIndex]
-
+      const myDestIndex = dests.findIndex((it) => it.name === cityName);     
+      this._destination = dests[myDestIndex];
       this.rerender();
     });
     };
