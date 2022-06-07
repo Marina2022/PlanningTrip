@@ -1,34 +1,16 @@
+import moment from "moment"
+
 export const getDateForDayNumber = (date) => {
-  let dateObj = date;
-  let days = dateObj.getDate();
-  if (days < 10) days = `0${days}`;
-  let month = dateObj.getMonth() + 1;
-  if (month < 10) month = `0${month}`;
-  let year = dateObj.getFullYear();
-  
-  return `${days}-${month}-${year}`;
+  return moment(date).format("DD-MM-y");
 };
 
 
 export const getDate = (date) => {
-  let dateObj = date;
-  let days = dateObj.getDate();
-  if (days < 10) days = `0${days}`;
-  let month = dateObj.getMonth() + 1;
-  if (month < 10) month = `0${month}`;
-  let year = dateObj.getFullYear() % 100;
-  if (year < 10) year = `0${year}`;
-  return `${days}/${month}/${year}`;
+  return moment(date).format("DD/MM/y");
 };
 
-export const getTime = (date) => {
-  const dateObj = date;
-  let hours = dateObj.getHours();
-  if (hours < 10) hours = `0${hours}`;
-  let minutes = dateObj.getMinutes();
-  if (minutes < 10) minutes = `0${minutes}`;
-  const timeStr = `${hours}:${minutes}`;
-  return timeStr;
+export const getTime = (date) => { 
+  return moment(date).format("HH:mm");
 };
 
 export const getTimeDiff = (dateFrom, dateTo) => {

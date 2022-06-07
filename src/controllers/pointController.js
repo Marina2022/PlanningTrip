@@ -31,6 +31,7 @@ export class PointController {
     this.pointEdit.setFavoriteHandler(this._onDataChange, this);
     this.pointEdit.setEventTypeHandler();
     this.pointEdit.setCityChangeHandler();
+    this.pointEdit.setDatePickers();
 
     if (oldPointEdit) {
       replace(this.pointEdit, oldPointEdit);

@@ -1,4 +1,7 @@
 import { AbstractSmartComponent } from "./abstractSmartComponent";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+
 
 import {
   EVENT_TYPES_TO,
@@ -102,6 +105,8 @@ export class EditPoint extends AbstractSmartComponent {
     this._destInput = null;
     this._eventType = this.point.type;
     this._destination = this.point.destination    
+    this._flatPickrs = [null, null];
+    
   }
 
   resetForm = ()=> {        
@@ -160,14 +165,14 @@ export class EditPoint extends AbstractSmartComponent {
         <label class="visually-hidden" for="event-start-time-1">
           From
         </label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getDate(
+        <input data-input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getDate(
           date_from
         )} ${getTime(date_from)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getDate(
+        <input data-input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getDate(
           date_to
         )} ${getTime(date_to)}">
       </div>
@@ -205,11 +210,11 @@ export class EditPoint extends AbstractSmartComponent {
   };
 
   recoveryListeners() {
-    this.setBtnHandlers(this._BtnHandlersCb);
-    
+    this.setBtnHandlers(this._BtnHandlersCb);    
     this.setFavoriteHandler(this._cb, this._pointController);
     this.setEventTypeHandler();
     this.setCityChangeHandler();
+    this.setDatePickers();
   }
 
   setBtnHandlers(cb) {
@@ -281,6 +286,23 @@ export class EditPoint extends AbstractSmartComponent {
       this.rerender();
     });
     };
+
+  setDatePickers(){    
+    const dateInputs = this.getElem().querySelectorAll(`.event__input--time`);
+    this._flatPickrs.forEach((flatP, index) => {
+      if (flatP) {
+        flatP.destroy();
+        flatP = null;
+      }
+      this._flatPickr = new flatpickr(dateInputs[index], {
+        defaultDate: index == 0 ? this.point.date_from : this.point.date_to,
+        enableTime: true,
+        allowInput: true,
+        altInput: true,
+        altFormat: "d/m/y H:i",
+      });
+    });
+  }
   }
   
 
