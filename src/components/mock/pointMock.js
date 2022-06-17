@@ -69,6 +69,7 @@ export const getPointMockArr = (count) => {
     const { dateFrom, dateTo } = generateDateObj();
     const type = getRandomArrayItem(EVENT_TYPES);
     const point = {
+      id: Date.now() + (Math.random()).toFixed(0),
       base_price: getRandomInt(500, 3000),
       date_from: new Date(dateFrom),
       date_to: new Date(dateTo),
