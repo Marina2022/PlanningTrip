@@ -27,7 +27,7 @@ const createMainFilters = () => {
   `;
 };
 
-export class Filters extends AbstractComponent {  
+export class FiltersComponent extends AbstractComponent {  
   getTemplate() {
     return createMainFilters();
   }

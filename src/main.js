@@ -2,12 +2,12 @@ import { TripMain } from "./components/tripMain";
 import { TripMainInfo } from "./components/tripMainInfo";
 import { TripMainCost } from "./components/tripMainCost";
 import { Menu } from "./components/menu";
-import { Filters } from "./components/filter";
 import { NewEventBtn } from "./components/newEventBtn";
 import { TripController } from "./controllers/tripController";
 import { render } from "./utils/render";
 import { getPointMockArr } from "./components/mock/pointMock";
 import { PointsModel } from "./models/pointsModel";
+import { FilterController } from "./controllers/filterController";
 
 const TRIP_EVENT_COUNT = 20;
 const points = getPointMockArr(TRIP_EVENT_COUNT);
@@ -29,7 +29,10 @@ const tripControls = document.querySelector(`.trip-controls`);
 tripControls.innerHTML = ``;
 
 render(tripControls, new Menu(), `beforeEnd`);
-render(tripControls, new Filters(), `beforeEnd`);
+
+const filterController = new FilterController(tripControls);
+filterController.render();
+//render(tripControls, new Filters(), `beforeEnd`);
 
 const tripController = new TripController(pointsModel);
 tripController.render();

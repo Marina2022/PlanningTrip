@@ -1,6 +1,7 @@
 export class PointsModel {
   constructor() {
     this._points = null;
+    this._dataChangeHandlers = [];
   }
 
   getPoints() {
@@ -22,5 +23,14 @@ export class PointsModel {
       .concat(this._points.slice(0, index))
       .concat(newPoint)
       .concat(this._points.slice(index));  
+    this._callDataChangeHanglers();
+  }
+  
+  _callDataChangeHanglers() {
+    this._dataChangeHandlers.forEach(handler => handler())
+  }
+
+  _addDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 }
