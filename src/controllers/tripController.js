@@ -4,15 +4,12 @@ import { NoEvents } from "../components/noEventsMsg";
 import { render } from "../utils/render";
 import { PointController } from "./pointController";
 
-
-
 export class TripController {
   constructor(pointsModel) {
     this._pointsModel = pointsModel;
     this._container = document.querySelector(`.trip-events`);
     this._noEvents = new NoEvents();
     this._sortingForm = new SortingForm();
-    //this.pointArr = getPointMockArr(TRIP_EVENT_COUNT);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._pointControllers = [];
@@ -77,13 +74,10 @@ export class TripController {
     }
   }
 
-  _onDataChange = (oldPoint, newPoint) => {
-    // const index = this.pointArr.findIndex((it) => it === oldPoint);    
-    // this.pointArr = []
-    //   .concat(this.pointArr.slice(0, index))
-    //   .concat(newPoint)
-    //   .concat(this.pointArr.slice(index));     
+  _onDataChange = (pointController, oldPoint, newPoint) => {   
     this._pointsModel.updatePoints(oldPoint.id, newPoint);
+    pointController.render(newPoint);
+
   }
 
   _onViewChange = (currentController) => {    

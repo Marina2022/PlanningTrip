@@ -28,7 +28,14 @@ export class PointController {
     this.pointEdit = new EditPoint(this._point);
     this.pointCard.setEditBtnHandler(this.onOpenBtnClick);
     this.pointEdit.setBtnHandlers(this.onCloseClick);
-    this.pointEdit.setFavoriteHandler(this._onDataChange, this);
+    
+    this.pointEdit.setFavoriteHandler(()=>{
+      const newPoint = Object.assign({}, this._point, {
+        is_favorite: !this._point.is_favorite,
+      });
+      this._onDataChange(this, this._point, newPoint);
+    });
+    
     this.pointEdit.setEventTypeHandler();
     this.pointEdit.setCityChangeHandler();
     this.pointEdit.setDatePickers();

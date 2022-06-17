@@ -100,8 +100,7 @@ export class EditPoint extends AbstractSmartComponent {
     this.point = point;
     this.setFavoriteHandler = this.setFavoriteHandler.bind(this);
     this._cb = null;
-    this._BtnHandlersCb = null;
-    this._pointController = null;
+    this._BtnHandlersCb = null;    
     this._destInput = null;
     this._eventType = this.point.type;
     this._destination = this.point.destination    
@@ -247,17 +246,13 @@ export class EditPoint extends AbstractSmartComponent {
     });
   }
 
-  setFavoriteHandler(cb, pointController) {
-    this._cb = cb;
-    this._pointController = pointController;
+  setFavoriteHandler(cb) {
+    this._cb = cb;    
     this.getElem()
       .querySelector(`.event__favorite-checkbox`)
       .addEventListener("change", () => {
-        const newPoint = Object.assign({}, this.point, {
-          is_favorite: !this.point.is_favorite,
-        });
-        cb(this.point, newPoint);
-        pointController.render(newPoint);
+        cb();
+        //pointController.render(newPoint);
       });
   }
 
