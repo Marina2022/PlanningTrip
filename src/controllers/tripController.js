@@ -13,6 +13,9 @@ export class TripController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._pointControllers = [];
+    this.updateAllTrips = this.updateAllTrips.bind(this);
+
+    this._pointsModel._addFilterChangeHandler(this.updateAllTrips);
   }
 
   render() {
@@ -49,6 +52,22 @@ export class TripController {
     }
   }
 
+  updateAllTrips() {
+    // нужно очистить всю страницу и заново отрендерить и все.. Ххехъ
+    // А как поменять ммм.. это ведь прямо из модели фильтрованное все возвращаем, ээээ
+    // console.log(this._pointsModel._filterType);
+    // console.log(this._pointsModel.getPoints())
+
+    this._container.innerHTML = ``;  // потом сделай по-человечески
+    this._pointControllers.forEach(pointContr => {
+      pointContr.destroy();
+    });
+    
+      
+    
+    this.renderTripDays(this._pointsModel.getPoints(), this._container);
+  }
+
   renderTripDays(points, tripEvents) {
     this._pointControllers = [];
     let filteredDates = [
@@ -74,43 +93,42 @@ export class TripController {
     }
   }
 
-  _onDataChange = (pointController, oldPoint, newPoint) => {   
+  _onDataChange = (pointController, oldPoint, newPoint) => {
     this._pointsModel.updatePoints(oldPoint.id, newPoint);
     pointController.render(newPoint);
+  };
 
-  }
-
-  _onViewChange = (currentController) => {    
-    this._pointControllers.forEach(pointContr=>{
+  _onViewChange = (currentController) => {
+    this._pointControllers.forEach((pointContr) => {
       if (pointContr !== currentController) {
         pointContr.setDefaultView();
       }
-    })
-  }
+    });
+  };
 
   getSortedPoints = (sortType) => {
-  if (sortType == "event")
-  return this._pointsModel
-    .getPoints()
-    .slice()
-    .sort((a, b) => {
-      if (a.destination.name > b.destination.name) return 1;
-      else return -1;
-    });
-  else if (sortType == "time")
-  return this._pointsModel
-    .getPoints()
-    .slice()
-    .sort((a, b) => {
-      const diff = b.date_to - b.date_from - (a.date_to - a.date_from);
-      return diff;
-    });
-  else if (sortType == "price")
-  return this._pointsModel
-    .getPoints()
-    .slice()
-    .sort((a, b) => {
-      return b.base_price - a.base_price;
-    });
-}
+    if (sortType == "event")
+      return this._pointsModel
+        .getPoints()
+        .slice()
+        .sort((a, b) => {
+          if (a.destination.name > b.destination.name) return 1;
+          else return -1;
+        });
+    else if (sortType == "time")
+      return this._pointsModel
+        .getPoints()
+        .slice()
+        .sort((a, b) => {
+          const diff = b.date_to - b.date_from - (a.date_to - a.date_from);
+          return diff;
+        });
+    else if (sortType == "price")
+      return this._pointsModel
+        .getPoints()
+        .slice()
+        .sort((a, b) => {
+          return b.base_price - a.base_price;
+        });
+  };
 }

@@ -50,7 +50,7 @@ const generateOffers = (type)=>{
 const generateDateObj = () => {
   let now = new Date(Date.now());
   const sign = Math.random > 0.5 ? 1 : -1;
-  const minutes = getRandomInt(0, 4320);
+  const minutes = getRandomInt(-4320, 4320);
   let dateFrom = Number(now.setMinutes(now.getMinutes() + minutes * sign));
        const diff = getRandomInt(1000 * 60 * 30, 1000 * 60 * 60 * 25);
   const dateTo = Number(dateFrom) + diff; 
@@ -77,8 +77,7 @@ export const getPointMockArr = (count) => {
         description: getRandomDesc(TripDescriptions),
         name: getRandomArrayItem(CITIES),
         pictures: getRandomPhotoArr(),
-      },
-      id: 0,
+      },      
       is_favorite: Math.random() > 0.5,
       offers: generateOffers(type),
       type: type,

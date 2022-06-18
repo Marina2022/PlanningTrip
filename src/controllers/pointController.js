@@ -1,6 +1,6 @@
 import { TripEvent } from "../components/tripEvent";
 import { EditPoint } from "../components/editForm";
-import { render, replace } from "../utils/render";
+import { render, replace, remove } from "../utils/render";
 
 export class PointController {
   constructor(container, onDataChange, onViewChange) {
@@ -11,6 +11,8 @@ export class PointController {
     this.pointCard = null;
     this.pointEdit = null;
     this._isFormOpen = false;
+
+    
   }
 
   setDefaultView() {
@@ -67,4 +69,12 @@ export class PointController {
       this._isFormOpen = false;
     }
   };
+
+  destroy(){    
+    remove(this.pointCard);
+    remove(this.pointEdit);
+    document.removeEventListener("keyup", this.onEsc);
+  }
+
+
 }

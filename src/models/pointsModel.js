@@ -1,11 +1,16 @@
+import { filters } from "../consts";
+import { getPointsByFilter } from "../utils/filter";
 export class PointsModel {
   constructor() {
     this._points = null;
     this._dataChangeHandlers = [];
+    this._filterChangeHandlers = [];
+    this._filterType = filters.EVERYTHING;
   }
 
-  getPoints() {
-    return this._points;
+  getPoints() {    
+    const filteredPoints = getPointsByFilter(this._points, this._filterType);      
+    return filteredPoints;
   }
 
   getAllPoints() {
@@ -14,6 +19,7 @@ export class PointsModel {
 
   setPoints(points) {
     this._points = Array.from(points);
+    //this._callDataChangeHanglers();
   }
 
   updatePoints(id, newPoint) {
@@ -22,15 +28,29 @@ export class PointsModel {
     this._points = []
       .concat(this._points.slice(0, index))
       .concat(newPoint)
-      .concat(this._points.slice(index));  
-    this._callDataChangeHanglers();
-  }
-  
-  _callDataChangeHanglers() {
-    this._dataChangeHandlers.forEach(handler => handler())
+      .concat(this._points.slice(index));
+    //this._callDataChangeHanglers();
   }
 
-  _addDataChangeHandler(handler) {
-    this._dataChangeHandlers.push(handler);
+  // Нужны ли они вообще?
+  // _callDataChangeHanglers() {
+  //   this._dataChangeHandlers.forEach((handler) => handler());
+  // }
+
+  // _addDataChangeHandler(handler) {
+  //   this._dataChangeHandlers.push(handler);
+  // }
+
+  _callFilterChangeHanglers() {
+    this._filterChangeHandlers.forEach((handler) => handler());
+  }
+
+  _addFilterChangeHandler(handler) {
+    this._filterChangeHandlers.push(handler);
+  }
+
+  setFilter(filterType){
+    this._filterType = filterType;
+    this._callFilterChangeHanglers();
   }
 }

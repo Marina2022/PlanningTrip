@@ -30,7 +30,7 @@ tripControls.innerHTML = ``;
 
 render(tripControls, new Menu(), `beforeEnd`);
 
-const filterController = new FilterController(tripControls);
+const filterController = new FilterController(tripControls, pointsModel);
 filterController.render();
 //render(tripControls, new Filters(), `beforeEnd`);
 

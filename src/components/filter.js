@@ -31,4 +31,13 @@ export class FiltersComponent extends AbstractComponent {
   getTemplate() {
     return createMainFilters();
   }
+
+  setFilterClickHandler(cb){  
+    const filterInputs = this.getElem().querySelectorAll(`.trip-filters__filter-input`);
+    filterInputs.forEach(filterInp => {
+      filterInp.addEventListener('change', (e)=>{
+        cb(e.target.value);
+      })
+    })
+  }
 }

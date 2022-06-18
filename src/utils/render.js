@@ -16,4 +16,10 @@ export const replace = (pointEdit, pointCard) => {
   if (isExisting) parentEl.replaceChild(editCartEl, pointCartEl);
 };
 
+export const remove = (component) => {  
+  const parent = component.getElem().parentElement;
+  parent.removeChild(component.getElem())
+  component.removeElem();  
+}
+
 
