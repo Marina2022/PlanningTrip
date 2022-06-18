@@ -117,6 +117,14 @@ export class EditPoint extends AbstractSmartComponent {
     return this.createEditForm(this.point);
   }
 
+  removeElem(){
+    if (this._flatPickrs[0]) {
+      this._flatPickrs[0].destroy();
+      this._flatPickrs[1].destroy();
+      this._flatPickrs = [null, null];
+    }
+  }
+
   createEditForm = (point) => {
     const { base_price, date_from, date_to, is_favorite, offers } =
       point;

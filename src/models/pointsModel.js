@@ -1,11 +1,14 @@
 import { filters } from "../consts";
 import { getPointsByFilter } from "../utils/filter";
+import { sortTypes } from "../components/sortingForm";
+
 export class PointsModel {
   constructor() {
     this._points = null;
     this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
     this._filterType = filters.EVERYTHING;
+    this.sortType = sortTypes.EVENT;
   }
 
   getPoints() {    

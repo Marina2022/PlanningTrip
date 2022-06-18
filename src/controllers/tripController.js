@@ -1,7 +1,7 @@
 import { SortingForm } from "../components/sortingForm";
 import { tripDay } from "../components/tripDay";
 import { NoEvents } from "../components/noEventsMsg";
-import { render } from "../utils/render";
+import { render, remove } from "../utils/render";
 import { PointController } from "./pointController";
 
 export class TripController {
@@ -9,10 +9,11 @@ export class TripController {
     this._pointsModel = pointsModel;
     this._container = document.querySelector(`.trip-events`);
     this._noEvents = new NoEvents();
-    this._sortingForm = new SortingForm();
+    this._sortingForm = null;// new SortingForm(this._pointsModel);
     this._onDataChange = this._onDataChange.bind(this);
-    this._onViewChange = this._onViewChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);    
     this._pointControllers = [];
+    //this._allTripDays = [];
     this.updateAllTrips = this.updateAllTrips.bind(this);
 
     this._pointsModel._addFilterChangeHandler(this.updateAllTrips);
@@ -22,51 +23,55 @@ export class TripController {
     const tripEvents = this._container;
     if (this._pointsModel.getPoints().length === 0) {
       render(tripEvents, this._noEvents, `beforeEnd`);
-    } else {
-      render(tripEvents, this._sortingForm, `beforeEnd`);
-      this._sortingForm.setSortClickHandler((sortType) => {
-        tripEvents.innerHTML = `
-        <h2 class="visually-hidden">Trip events</h2>
-        `;
-        const sortedPoints = this.getSortedPoints(sortType);
-        if (sortType == "event") {
-          render(tripEvents, this._sortingForm, `beforeEnd`);
-          this.renderTripDays(this._pointsModel.getPoints(), tripEvents);
-          return;
-        }
-        render(tripEvents, this._sortingForm, `beforeEnd`);
-        render(tripEvents, new tripDay("", ""), `beforeEnd`);
-        const tripEventsList = document.querySelector(`.trip-events__list-1`);
-        sortedPoints.forEach((point) => {
-          const pointContr = new PointController(
-            tripEventsList,
-            this._onDataChange,
-            this._onViewChange
-          );
-          pointContr.render(point);
-          this._pointControllers.push(pointContr);
-        });
-      });
+      return;
+    } 
+    
+    // массив пойнтов не пустой:
+    this._sortingForm = new SortingForm(this._pointsModel);
+    render(tripEvents, this._sortingForm, `beforeEnd`);
+    this._sortingForm.setSortClickHandler((sortType) => {
+      this._pointsModel.sortType = sortType; 
+      tripEvents.innerHTML = `
+      <h2 class="visually-hidden">Trip events</h2>
+      `;
 
-      this.renderTripDays(this._pointsModel.getPoints(), tripEvents);
-    }
+      const sortedPoints = this.getSortedPoints(sortType);
+
+      if (sortType == "event") {
+        this._sortingForm = new SortingForm(this._pointsModel);
+        render(tripEvents, this._sortingForm, `beforeEnd`);
+        this.renderTripDays(this._pointsModel.getPoints(), tripEvents);
+        return;
+      }
+      render(tripEvents, this._sortingForm, `beforeEnd`);
+      render(tripEvents, new tripDay("", ""), `beforeEnd`);
+
+      const tripEventsList = document.querySelector(`.trip-events__list-1`);
+      sortedPoints.forEach((point) => {
+        const pointContr = new PointController(
+          tripEventsList,
+          this._onDataChange,
+          this._onViewChange
+        );
+        pointContr.render(point);
+        this._pointControllers.push(pointContr);
+      });
+    });
+
+    this.renderTripDays(this._pointsModel.getPoints(), tripEvents);
+    
   }
 
   updateAllTrips() {
-    // нужно очистить всю страницу и заново отрендерить и все.. Ххехъ
-    // А как поменять ммм.. это ведь прямо из модели фильтрованное все возвращаем, ээээ
-    // console.log(this._pointsModel._filterType);
-    // console.log(this._pointsModel.getPoints())
-
-    this._container.innerHTML = ``;  // потом сделай по-человечески
-    this._pointControllers.forEach(pointContr => {
-      pointContr.destroy();
-    });
+    this._pointsModel.sortType = `event`;
+    this._container.innerHTML = ``;
+    this._sortingForm._sortType = `event`;
+    this._pointControllers.forEach((pointContr) => pointContr.destroy());
+    this._pointControllers = [];
+    //this._allTripDays = [];
+    this.render();
     
-      
-    
-    this.renderTripDays(this._pointsModel.getPoints(), this._container);
-  }
+   }
 
   renderTripDays(points, tripEvents) {
     this._pointControllers = [];
@@ -79,7 +84,9 @@ export class TripController {
         (item) => item.date_from.toDateString() == filteredDates[i]
       );
       const dateForRender = dateArr[0].date_from;
-      render(tripEvents, new tripDay(i + 1, dateForRender), `beforeEnd`);
+      const tripOneDay = new tripDay(i + 1, dateForRender);
+      //this._allTripDays.push(tripOneDay);
+      render(tripEvents, tripOneDay, `beforeEnd`);
       const tripEventsLists = document.querySelectorAll(`.trip-events__list-1`);
       dateArr.forEach((point) => {
         const pointContr = new PointController(
@@ -92,6 +99,8 @@ export class TripController {
       });
     }
   }
+
+  
 
   _onDataChange = (pointController, oldPoint, newPoint) => {
     this._pointsModel.updatePoints(oldPoint.id, newPoint);

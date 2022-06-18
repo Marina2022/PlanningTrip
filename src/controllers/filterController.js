@@ -1,6 +1,7 @@
 import {filters} from "../consts";
 import { FiltersComponent } from "../components/filter";
 import { render } from "../utils/render";
+import {sortTypes } from "../components/sortingForm";
 
 export class FilterController {
   constructor(container, pointsModel) {    
@@ -15,6 +16,8 @@ export class FilterController {
     render(this._container, this._filterComponent, `beforeEnd`);
     this._filterComponent.setFilterClickHandler((targetValue) => {      
       this._pointsModel.setFilter(targetValue);
+      this._pointsModel._sortType = sortTypes.EVENT;
+
     });
   }
 

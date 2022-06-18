@@ -70,10 +70,11 @@ export class PointController {
     }
   };
 
-  destroy(){    
+  destroy() {
     remove(this.pointCard);
     remove(this.pointEdit);
     document.removeEventListener("keyup", this.onEsc);
+
   }
 
 

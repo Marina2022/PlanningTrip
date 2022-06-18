@@ -1,6 +1,7 @@
 import { getDateForDayNumber } from "../utils/date";
 import { MONTHS } from "../consts";
 import { AbstractComponent } from "./abstractComponent";
+import { remove } from "../utils/render";
 
 const createTripDayMarkup = (daysCount, date) => {  
   return `<ul class="trip-days">
@@ -20,12 +21,16 @@ const createTripDayMarkup = (daysCount, date) => {
 
 export class tripDay extends AbstractComponent {
   constructor(daysCount, date) {
-    super();    
+    super();
     this.daysCount = daysCount;
     this.date = date;
   }
   getTemplate() {
     return createTripDayMarkup(this.daysCount, this.date);
+  }
+
+  destroy() {
+    remove(this);   
   }
 }
 
