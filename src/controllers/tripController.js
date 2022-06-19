@@ -16,7 +16,7 @@ export class TripController {
     //this._allTripDays = [];
     this.updateAllTrips = this.updateAllTrips.bind(this);
 
-    this._pointsModel._addFilterChangeHandler(this.updateAllTrips);
+    this._pointsModel.addFilterChangeHandler(this.updateAllTrips);
   }
 
   render() {
@@ -29,8 +29,11 @@ export class TripController {
     // массив пойнтов не пустой:
     this._sortingForm = new SortingForm(this._pointsModel);
     render(tripEvents, this._sortingForm, `beforeEnd`);
+
     this._sortingForm.setSortClickHandler((sortType) => {
       this._pointsModel.sortType = sortType; 
+      this._pointControllers.forEach((pointContr) => pointContr.destroy());
+      this._pointControllers = [];
       tripEvents.innerHTML = `
       <h2 class="visually-hidden">Trip events</h2>
       `;

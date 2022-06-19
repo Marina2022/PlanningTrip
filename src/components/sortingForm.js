@@ -47,19 +47,16 @@ export class SortingForm extends AbstractSmartComponent {
     this._pointsModel = pointsModel;
     this._cb = null;
   }
-  getTemplate() {
-    console.log("из сортинг формы", this._sortType);
+  getTemplate() {    
     return createSortingForm(this._sortType);
   }
   setSortClickHandler(cb) {
     this._cb = cb;
     this.getElem().addEventListener("click", (e) => {
-      if (!e.target.classList.contains("trip-sort__btn")) return;
-      //if (this.sortType == e.target.dataset.sortType) return;
+      if (!e.target.classList.contains("trip-sort__btn")) return;      
       if (this._pointsModel.sortType == e.target.dataset.sortType) return;      
-      cb(e.target.dataset.sortType);
-      //this.sortType = e.target.dataset.sortType;    // Надо ли эту строку ваще?
-      this._pointsModel.sortType = e.target.dataset.sortType;   
+      cb(e.target.dataset.sortType);      
+      //this._pointsModel.sortType = e.target.dataset.sortType;   
       this._sortType = e.target.dataset.sortType;     
 
     });

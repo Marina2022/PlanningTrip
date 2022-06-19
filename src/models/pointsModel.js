@@ -48,7 +48,7 @@ export class PointsModel {
     this._filterChangeHandlers.forEach((handler) => handler());
   }
 
-  _addFilterChangeHandler(handler) {
+  addFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }
 
