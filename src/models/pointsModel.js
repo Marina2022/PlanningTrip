@@ -9,6 +9,22 @@ export class PointsModel {
     this._filterChangeHandlers = [];
     this._filterType = filters.EVERYTHING;
     this.sortType = sortTypes.EVENT;
+    this._destinations = null;
+    this._offers = null;
+  }
+
+  getDestinations() {
+    return this._destinations;
+  }
+  setDestinations(dests) {
+    this._destinations = dests;
+  }
+
+  getOffers() {
+    return this._offers;
+  }
+  setOffers(offers) {
+    this._offers = offers;
   }
 
   getPoints() {
@@ -47,10 +63,7 @@ export class PointsModel {
   }
 
   addPoint(point) {
-    
-    this._points = []
-      .concat(this._points.slice(0))
-      .concat(point);
+    this._points = [].concat(this._points.slice(0)).concat(point);
   }
 
   // Нужны ли они вообще?

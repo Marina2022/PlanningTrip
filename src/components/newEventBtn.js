@@ -18,9 +18,8 @@ export class NewEventBtn extends AbstractComponent {
     return createNewEventBtn();
   }
   setBtnClickHandler(cb) {
-    //this.getElem().querySelector(`.trip-main__event-add-btn`);
     this.getElem().addEventListener('click', ()=>{
-      cb("я кликнулась ура");
+      cb();
     })
   }
 }

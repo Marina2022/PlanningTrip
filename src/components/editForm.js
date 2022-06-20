@@ -93,8 +93,9 @@ const createTypeListMarkup = (typeArr) => {
 };
 
 export class EditPoint extends AbstractSmartComponent {
-  constructor(point, isNew = false) {
+  constructor(point, isNew = false, pointsModel) {
     super();
+    this._pointsModel = pointsModel;
     this.point = point;
     this._favoriteHandler = null;
     this._BtnHandlersCb = null;
@@ -282,7 +283,7 @@ export class EditPoint extends AbstractSmartComponent {
       cb();
     });
   }
-  ///
+
   setDeleteHandler(cb) {
     this._deleteHandler = cb;
     const deleteBtn = this.getElem().querySelector(`.event__reset-btn`);
@@ -334,7 +335,8 @@ export class EditPoint extends AbstractSmartComponent {
   }
 
   getDestinationObject(cityName) {    
-    const dests = getDestinations();
+    //const dests = getDestinations();
+    const dests = this._pointsModel.getDestinations();
     const myDestIndex = dests.findIndex((it) => it.name === cityName);
     return dests[myDestIndex];
     

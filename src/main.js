@@ -5,11 +5,12 @@ import { Menu } from "./components/menu";
 import { NewEventBtn } from "./components/newEventBtn";
 import { TripController } from "./controllers/tripController";
 import { render } from "./utils/render";
-import { getPointMockArr } from "./components/mock/pointMock";
+import { getDestinations, getPointMockArr } from "./components/mock/pointMock";
 import { PointsModel } from "./models/pointsModel";
 import { FilterController } from "./controllers/filterController";
+import { EVENT_OFFERS } from "./consts";
 
-const TRIP_EVENT_COUNT = 20;
+const TRIP_EVENT_COUNT = 5;
 const points = getPointMockArr(TRIP_EVENT_COUNT);
 
 const pointsModel = new PointsModel();
@@ -20,8 +21,6 @@ render(tripMain, new TripMain(), `afterBegin`);
 
 export const eventBtn = new NewEventBtn();
 render(tripMain, eventBtn, `beforeEnd`);
-
-
 
 // tripMainInfoCont - контейнер для названия и цены в хедере
 const tripMainContainer = document.querySelector(`.trip-info`);
@@ -38,10 +37,13 @@ const filterController = new FilterController(tripControls, pointsModel);
 filterController.render();
 //render(tripControls, new Filters(), `beforeEnd`);
 
+pointsModel.setDestinations(getDestinations());
+pointsModel.setOffers(EVENT_OFFERS);
+
 const tripController = new TripController(pointsModel);
 tripController.render();
 
-//eventBtn.setBtnClickHandler(on);
+eventBtn.setBtnClickHandler(tripController.createPoint);
 
 
 

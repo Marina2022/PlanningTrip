@@ -20,7 +20,8 @@ export const modes = {
 }
 
 export class PointController {
-  constructor(container, onDataChange, onViewChange, isNew = false) {
+  constructor(container, onDataChange, onViewChange, isNew = false, pointsModel) {
+    this._pointsModel = pointsModel;
     this._container = container;
     this._point = null;
     this._onDataChange = onDataChange;
@@ -45,14 +46,16 @@ export class PointController {
     this._point = point;
     const oldPointEdit = this.pointEdit;
     this.pointCard = new TripEvent(this._point);
-    this.pointEdit = new EditPoint(this._point, this._isNew);
+    this.pointEdit = new EditPoint(this._point, this._isNew, this._pointsModel);
     this.pointCard.setEditBtnHandler(this.onOpenBtnClick);
     this.pointEdit.setBtnHandlers(this.onCloseClick);
 
     this.pointEdit.setSubmitHandler(()=>{
+      
       const newPoint = this.pointEdit.getFormData();        
       this._onDataChange(this, this._point, newPoint);
-      this.onCloseClick();
+      
+      //this.onCloseClick();  // вроде не влияет ни на че
       
     }); 
 

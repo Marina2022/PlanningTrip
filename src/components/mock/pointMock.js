@@ -30,7 +30,7 @@ const getRandomPhotoArr = ()=> {
   return photoArr;
 }
 
-const generateOffers = (type)=>{
+export const generateOffers = (type)=>{
   let initialArray = EVENT_OFFERS.find((item)=>{
     return item.type === type;
   });  
