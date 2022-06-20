@@ -56,7 +56,6 @@ export class SortingForm extends AbstractSmartComponent {
       if (!e.target.classList.contains("trip-sort__btn")) return;      
       if (this._pointsModel.sortType == e.target.dataset.sortType) return;      
       cb(e.target.dataset.sortType);      
-      //this._pointsModel.sortType = e.target.dataset.sortType;   
       this._sortType = e.target.dataset.sortType;     
 
     });

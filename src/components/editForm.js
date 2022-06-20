@@ -1,8 +1,6 @@
 import { AbstractSmartComponent } from "./abstractSmartComponent";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-
-
 import {
   EVENT_TYPES_TO,
   EVENT_TYPES_IN,
@@ -25,7 +23,7 @@ const generateEventDetails = (selectedOffers, type) => {
     .map((offer, index) => {
       return `
         <div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" ${
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" value = "${index}" ${
         selectedOffers.some((item) => {
           return item.title == offer.title;
         })
@@ -98,37 +96,40 @@ export class EditPoint extends AbstractSmartComponent {
   constructor(point, isNew = false) {
     super();
     this.point = point;
-    this.setFavoriteHandler = this.setFavoriteHandler.bind(this);
-    this._cb = null;
-    this._BtnHandlersCb = null;    
+    this._favoriteHandler = null;
+    this._BtnHandlersCb = null;
+    this._submitHandler = null;
+    this._deleteHandler = null;
     this._destInput = null;
-    this._eventType = this.point.type;
-    this._destination = this.point.destination    
+    this._eventType = this.point.type;  
+    this._destinationName = this.point.destinationName;
+    this._destination = this.getDestinationObject(this.point.destinationName);    
     this._flatPickrs = [null, null];
-    this._isNew = isNew;    
+    this._isNew = isNew;
+
+    //this.getDestinationObject();
   }
 
-  resetForm = ()=> {        
-    this._eventType = this.point.type;    
-    this._destination = this.point.destination;   
+  resetForm = () => {
+    this._eventType = this.point.type;
+    this._destination = this.getDestinationObject(this.point.destinationName);    
     this.rerender();
-  }
+  };
   getTemplate() {
     return this.createEditForm(this.point, this._isNew);
   }
 
-  removeElem(){
+  removeElem() {
     super.removeElem();
     if (this._flatPickrs[0]) {
       this._flatPickrs[0].destroy();
       this._flatPickrs[1].destroy();
-      this._flatPickrs = [null, null];      
+      this._flatPickrs = [null, null];
     }
   }
 
   createEditForm = (point, isNew) => {
-    const { base_price, date_from, date_to, is_favorite, offers } =
-      point;
+    const { base_price, date_from, date_to, is_favorite, offers } = point;
     const type = this._eventType;
     const destination = this._destination;
     return `
@@ -228,27 +229,76 @@ export class EditPoint extends AbstractSmartComponent {
   };
 
   recoveryListeners() {
-    this.setBtnHandlers(this._BtnHandlersCb);    
-    this.setFavoriteHandler(this._cb, this._pointController);
+    this.setBtnHandlers(this._BtnHandlersCb);
+    this.setFavoriteHandler(this._favoriteHandler, this._pointController);
     this.setEventTypeHandler();
     this.setCityChangeHandler();
     this.setDatePickers();
+    this.setSubmitHandler(this._submitHandler);
+    this.setDeleteHandler(this._deleteHandler);
+  }
+
+  getFormData() {
+    const formData = new FormData(this.getElem());
+
+    const base_price = formData.get("event-price");
+    const id = Date.now() + Math.random().toFixed(0);
+    const date_from = new Date(formData.get("event-start-time"));
+    const date_to = new Date(formData.get("event-end-time"));
+    const destinationName = formData.get("event-destination");    
+    const is_favorite = formData.get("event-favorite") == `on` ? true : false;
+    const type = this._eventType;
+
+    const resultOffersArr = [];
+    const formOffers = formData.getAll("event-offer-luggage");
+    const typeEvents = EVENT_OFFERS.find((it) => {
+      return it.type == type;
+    });
+    formOffers.forEach((it) => {
+
+      const obj = { title: typeEvents.offers[Number(it)].title,
+      price: typeEvents.offers[Number(it)].price
+     };
+      resultOffersArr.push(obj);
+    })
+    ;
+    const offers = resultOffersArr;
+    return {
+      id,
+      base_price,
+      date_from,
+      date_to,
+      destinationName,
+      is_favorite,
+      type,
+      offers
+    };
+  }
+
+  setSubmitHandler(cb) {
+    this._submitHandler = cb;
+    this.getElem().addEventListener("submit", (e) => {
+      e.preventDefault();
+      cb();
+    });
+  }
+  ///
+  setDeleteHandler(cb) {
+    this._deleteHandler = cb;
+    const deleteBtn = this.getElem().querySelector(`.event__reset-btn`);
+    deleteBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.resetForm(); // это если cancel нажали, хотя можно и так, все равно удалять
+      cb();
+    });
   }
 
   setBtnHandlers(cb) {
     this._BtnHandlersCb = cb;
-
-    this.getElem().addEventListener("submit", (e) => {      
-      e.preventDefault();
-      this.resetForm();
-      cb();
-    });
-
     const rollupBtn = this.getElem().querySelector(`.event__rollup-btn`);
-    rollupBtn.addEventListener("click", ()=> {      
+    rollupBtn.addEventListener("click", () => {
       this.resetForm();
       cb();
-      
     });
     this._destInput = this.getElem().querySelector(
       ".event__input--destination"
@@ -260,26 +310,34 @@ export class EditPoint extends AbstractSmartComponent {
   }
 
   setFavoriteHandler(cb) {
-    this._cb = cb;    
-    this.getElem()
-      .querySelector(`.event__favorite-checkbox`)
-      .addEventListener("change", () => {
+    this._favoriteHandler = cb;
+    const favorBtn = this.getElem().querySelector(`.event__favorite-checkbox`);
+    if (favorBtn) {
+      favorBtn.addEventListener("change", () => {
         cb();
         //pointController.render(newPoint);
       });
+    }
   }
 
   setEventTypeHandler() {
     const typeBtns = this.getElem().querySelectorAll(`.event__type-input`);
     typeBtns.forEach((btn) => {
-      btn.addEventListener(`change`, (e) => {        
+      btn.addEventListener(`change`, (e) => {
         if (e.target.checked == true) {
           const type = e.target.value;
           this._eventType = type;
-          this.rerender(); 
+          this.rerender();
         }
       });
     });
+  }
+
+  getDestinationObject(cityName) {    
+    const dests = getDestinations();
+    const myDestIndex = dests.findIndex((it) => it.name === cityName);
+    return dests[myDestIndex];
+    
   }
 
   setCityChangeHandler() {
@@ -289,13 +347,13 @@ export class EditPoint extends AbstractSmartComponent {
     cityInput.addEventListener(`change`, (e) => {
       const cityName = e.target.value;
       const dests = getDestinations();
-      const myDestIndex = dests.findIndex((it) => it.name === cityName);     
+      const myDestIndex = dests.findIndex((it) => it.name === cityName);
       this._destination = dests[myDestIndex];
       this.rerender();
     });
-    };
+  }
 
-  setDatePickers(){    
+  setDatePickers() {
     const dateInputs = this.getElem().querySelectorAll(`.event__input--time`);
     this._flatPickrs.forEach((flatP, index) => {
       if (flatP) {
@@ -311,6 +369,6 @@ export class EditPoint extends AbstractSmartComponent {
       });
     });
   }
-  }
+}
   
 

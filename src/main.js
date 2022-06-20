@@ -17,7 +17,11 @@ pointsModel.setPoints(points);
 
 const tripMain = document.querySelector(`.trip-main`);
 render(tripMain, new TripMain(), `afterBegin`);
-render(tripMain, new NewEventBtn(), `beforeEnd`);
+
+export const eventBtn = new NewEventBtn();
+render(tripMain, eventBtn, `beforeEnd`);
+
+
 
 // tripMainInfoCont - контейнер для названия и цены в хедере
 const tripMainContainer = document.querySelector(`.trip-info`);
@@ -37,6 +41,7 @@ filterController.render();
 const tripController = new TripController(pointsModel);
 tripController.render();
 
+//eventBtn.setBtnClickHandler(on);
 
 
 

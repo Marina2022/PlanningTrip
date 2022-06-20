@@ -69,15 +69,11 @@ export const getPointMockArr = (count) => {
     const { dateFrom, dateTo } = generateDateObj();
     const type = getRandomArrayItem(EVENT_TYPES);
     const point = {
-      id: Date.now() + (Math.random()).toFixed(0),
+      id: Date.now() + Math.random().toFixed(0),
       base_price: getRandomInt(500, 3000),
       date_from: new Date(dateFrom),
       date_to: new Date(dateTo),
-      destination: {
-        description: getRandomDesc(TripDescriptions),
-        name: getRandomArrayItem(CITIES),
-        pictures: getRandomPhotoArr(),
-      },      
+      destinationName: getRandomArrayItem(CITIES),
       is_favorite: Math.random() > 0.5,
       offers: generateOffers(type),
       type: type,
@@ -87,7 +83,6 @@ export const getPointMockArr = (count) => {
   pointArr.sort((a, b) => {
     return a.date_from - b.date_from;
   });
-
   return pointArr;
 };
 

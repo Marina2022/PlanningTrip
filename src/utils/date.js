@@ -4,7 +4,6 @@ export const getDateForDayNumber = (date) => {
   return moment(date).format("DD-MM-y");
 };
 
-
 export const getDate = (date) => {
   return moment(date).format("DD/MM/y");
 };

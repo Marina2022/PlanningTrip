@@ -11,8 +11,11 @@ export class PointsModel {
     this.sortType = sortTypes.EVENT;
   }
 
-  getPoints() {    
-    const filteredPoints = getPointsByFilter(this._points, this._filterType);      
+  getPoints() {
+    this._points = this._points.sort((a, b) => {
+      return a.date_from - b.date_from;
+    });
+    const filteredPoints = getPointsByFilter(this._points, this._filterType);
     return filteredPoints;
   }
 
@@ -31,8 +34,23 @@ export class PointsModel {
     this._points = []
       .concat(this._points.slice(0, index))
       .concat(newPoint)
-      .concat(this._points.slice(index));
+      .concat(this._points.slice(index + 1));
     //this._callDataChangeHanglers();
+  }
+
+  removePoint(id) {
+    const index = this._points.findIndex((point) => point.id === id);
+    if (index == -1) return;
+    this._points = []
+      .concat(this._points.slice(0, index))
+      .concat(this._points.slice(index + 1));
+  }
+
+  addPoint(point) {
+    
+    this._points = []
+      .concat(this._points.slice(0))
+      .concat(point);
   }
 
   // Нужны ли они вообще?
@@ -52,7 +70,7 @@ export class PointsModel {
     this._filterChangeHandlers.push(handler);
   }
 
-  setFilter(filterType){
+  setFilter(filterType) {
     this._filterType = filterType;
     this._callFilterChangeHanglers();
   }
