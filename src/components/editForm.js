@@ -104,7 +104,12 @@ export class EditPoint extends AbstractSmartComponent {
     this._destInput = null;
     this._eventType = this.point.type;  
     this._destinationName = this.point.destinationName;
-    this._destination = this.getDestinationObject(this.point.destinationName);    
+    this._destinationName == ``
+      ? (this._destination = null)
+      : (this._destination = this.getDestinationObject(
+          this.point.destinationName
+        ));
+        
     this._flatPickrs = [null, null];
     this._isNew = isNew;
 
@@ -165,8 +170,8 @@ export class EditPoint extends AbstractSmartComponent {
         : ``
     }
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
-          destination.name
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination ? 
+          destination.name : ``
         }" list="destination-list-1">
         ${generateDatalist(CITIES)}
       </div>
@@ -224,7 +229,7 @@ export class EditPoint extends AbstractSmartComponent {
     </header>    
     <section class="event__details">
     ${generateEventDetails(offers, type)}
-    ${generateEventDestinationInfo(destination)}
+    ${destination  ? generateEventDestinationInfo(destination) : ''}
     </section>
   </form>`;
   };

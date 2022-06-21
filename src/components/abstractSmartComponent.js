@@ -6,7 +6,7 @@ export class AbstractSmartComponent extends AbstractComponent {
   // }
   rerender() {
     const oldELem = this._elem;
-    this.removeElem();       
+    this.removeElem();
     const newElem = this.getElem();
     oldELem.parentElement.replaceChild(newElem, oldELem);
     this.recoveryListeners();
@@ -14,5 +14,12 @@ export class AbstractSmartComponent extends AbstractComponent {
 
   recoveryListeners() {
     throw new Error(`be sure to implement method recoveryEvents`);
+  }
+
+  hide() {
+    this.getElem().classList.add(`visually-hidden`);
+  }
+  show() {
+    this.getElem().classList.remove(`visually-hidden`);
   }
 }

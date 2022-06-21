@@ -7,9 +7,9 @@ import { emptyPoint, modes as pointControllerModes, PointController } from "./po
 
 
 export class TripController {
-  constructor(pointsModel) {
+  constructor(container, pointsModel) {
     this._pointsModel = pointsModel;
-    this._container = document.querySelector(`.trip-events`);
+    this._container = container;
     this._noEvents = new NoEvents();
     this._sortingForm = null; // new SortingForm(this._pointsModel);
     this._onDataChange = this._onDataChange.bind(this);
@@ -80,7 +80,6 @@ export class TripController {
     this._pointControllers.push(pointContr);
     this._onViewChange(pointContr);  // ой не знаййю я
   }
-
   updateAllTrips() {
     this._pointsModel.sortType = `event`;
     this._sortingForm._sortType = `event`;
@@ -177,4 +176,12 @@ export class TripController {
           return b.base_price - a.base_price;
         });
   };
+
+  hide() {
+    this._container.classList.add('visually-hidden');
+  }
+  show() {
+    this._container.classList.remove('visually-hidden');
+    this.updateAllTrips();
+  }
 }

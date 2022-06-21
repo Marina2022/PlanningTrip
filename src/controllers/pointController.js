@@ -7,7 +7,7 @@ export const emptyPoint = {
   base_price: 0,
   date_from: new Date(),
   date_to: new Date(),
-  destinationName: `Vena`,
+  destinationName: ``,
   is_favorite: false,
   offers: [],
   type: `taxi`,

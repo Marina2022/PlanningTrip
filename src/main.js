@@ -2,6 +2,7 @@ import { TripMain } from "./components/tripMain";
 import { TripMainInfo } from "./components/tripMainInfo";
 import { TripMainCost } from "./components/tripMainCost";
 import { Menu } from "./components/menu";
+import { Stats } from "./components/stats";
 import { NewEventBtn } from "./components/newEventBtn";
 import { TripController } from "./controllers/tripController";
 import { render } from "./utils/render";
@@ -19,7 +20,7 @@ pointsModel.setPoints(points);
 const tripMain = document.querySelector(`.trip-main`);
 render(tripMain, new TripMain(), `afterBegin`);
 
-export const eventBtn = new NewEventBtn();
+const eventBtn = new NewEventBtn();
 render(tripMain, eventBtn, `beforeEnd`);
 
 // tripMainInfoCont - контейнер для названия и цены в хедере
@@ -31,17 +32,40 @@ render(tripMainContainer, new TripMainInfo(), `afterBegin`);
 const tripControls = document.querySelector(`.trip-controls`);
 tripControls.innerHTML = ``;
 
-render(tripControls, new Menu(), `beforeEnd`);
+const menuComponent = new Menu(); 
+render(tripControls, menuComponent, `beforeEnd`);
+
 
 const filterController = new FilterController(tripControls, pointsModel);
 filterController.render();
-//render(tripControls, new Filters(), `beforeEnd`);
 
 pointsModel.setDestinations(getDestinations());
 pointsModel.setOffers(EVENT_OFFERS);
 
-const tripController = new TripController(pointsModel);
+///
+const tripEvents = document.querySelector(`.trip-events`)
+const bodyContainer = document.querySelector(`.page-main`);
+
+const tripController = new TripController(tripEvents, pointsModel);
 tripController.render();
+
+const statsComponent = new Stats(pointsModel); 
+render(bodyContainer, statsComponent, `beforeEnd`);
+statsComponent.render();
+statsComponent.hide();
+
+menuComponent.setMenuItemClickHandler((id)=>{
+  switch(id) {
+    case `table`: 
+    statsComponent.hide();
+    tripController.show();
+    
+    break;
+    case `stats`:     
+    statsComponent.show();    
+    tripController.hide();
+  }
+})
 
 eventBtn.setBtnClickHandler(tripController.createPoint);
 
