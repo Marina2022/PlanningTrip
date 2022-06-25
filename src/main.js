@@ -72,13 +72,6 @@ eventBtn.setBtnClickHandler(tripController.createPoint);
 
 
 
-
-
-
-
-
-
-
 /***************************************
  * Не удаляй пока, тут заголовки!
  */
