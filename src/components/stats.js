@@ -49,8 +49,6 @@ export class Stats extends AbstractSmartComponent {
   }
 
   render() {
-    console.log(this.getMoneyPerTypeObject());
-
     const moneyCtx = document.querySelector(`.statistics__chart--money`);
     const transportCtx = document.querySelector(
       `.statistics__chart--transport`
@@ -59,7 +57,6 @@ export class Stats extends AbstractSmartComponent {
 
     // Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
 const BAR_HEIGHT = 55;
-console.log(Object.keys(this.getMoneyPerTypeObject()));
 moneyCtx.height = BAR_HEIGHT * 4;
 transportCtx.height = BAR_HEIGHT * 4;
 timeSpendCtx.height = BAR_HEIGHT * 4;

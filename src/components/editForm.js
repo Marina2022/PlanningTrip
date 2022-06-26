@@ -8,17 +8,19 @@ import {
   EVENT_OFFERS,
 } from "../consts";
 import { getDate, getTime } from "../utils/date";
-import {getDestinations} from "./mock/pointMock"
+//import {getDestinations} from "./mock/pointMock"
 
-const generateEventDetails = (selectedOffers, type) => {
-  let allPossibleOffers = EVENT_OFFERS.find((item) => {
-    return item.type == type;
-  });
 
+
+
+const generateEventDetails = (selectedOffers, type, allPossibleOffers) => {  
   if (allPossibleOffers == undefined)
     return ``; // значит, нет офферов на этот тип события
-  else allPossibleOffers = allPossibleOffers.offers;
-
+  
+  const offerIndex = allPossibleOffers.findIndex(
+    (offerItem) => offerItem.type == type
+  );
+  allPossibleOffers = allPossibleOffers[offerIndex].offers; 
   const offerInnerHtml = allPossibleOffers
     .map((offer, index) => {
       return `
@@ -102,29 +104,24 @@ export class EditPoint extends AbstractSmartComponent {
     this._submitHandler = null;
     this._deleteHandler = null;
     this._destInput = null;
-    this._eventType = this.point.type;  
-    // this._destinationName = this.point.destinationName;
-    // this._destinationName == ``
-    //   ? (this._destination = null)
-    //   : (this._destination = this.getDestinationObject(
-    //       this.point.destinationName
-    //     ));
+    this._eventType = this.point.type;
     this._destination = this.point.destination;
-
     this._flatPickrs = [null, null];
     this._isNew = isNew;
-
-    //this.getDestinationObject();
   }
 
   resetForm = () => {
     this._eventType = this.point.type;
-    //this._destination = this.getDestinationObject(this.point.destinationName);    
-    this._destination = this.point.destination;    
+    this._destination = this.point.destination;
     this.rerender();
   };
   getTemplate() {
-    return this.createEditForm(this.point, this._isNew);
+    return this.createEditForm(
+      this.point,
+      this._isNew,
+      this._pointsModel.getOffers(),
+      this._pointsModel.getDestinations()
+    );
   }
 
   removeElem() {
@@ -136,8 +133,14 @@ export class EditPoint extends AbstractSmartComponent {
     }
   }
 
-  createEditForm = (point, isNew) => {
-    const { base_price, date_from, date_to, is_favorite, offers } = point;
+  createEditForm = (point, isNew, allPossibleOffers, destinations) => {
+    const {
+      base_price,
+      date_from,
+      date_to,
+      is_favorite,
+      offers: selectedOffers,
+    } = point;
     const type = this._eventType;
     const destination = this._destination;
     return `
@@ -172,10 +175,13 @@ export class EditPoint extends AbstractSmartComponent {
         : ``
     }
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination ? 
-          destination.name : ``
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
+          destination ? destination.name : ``
         }" list="destination-list-1">
-        ${generateDatalist(CITIES)}
+        
+        ${generateDatalist(destinations.map((item) => item.name))}
+        
+        
       </div>
 
       <div class="event__field-group  event__field-group--time">
@@ -230,8 +236,8 @@ export class EditPoint extends AbstractSmartComponent {
           
     </header>    
     <section class="event__details">
-    ${generateEventDetails(offers, type)}
-    ${destination  ? createEventDestinationInfo(destination) : ''}
+    ${generateEventDetails(selectedOffers, type, allPossibleOffers)}
+    ${destination ? createEventDestinationInfo(destination) : ""}
     </section>
   </form>`;
   };
@@ -253,33 +259,45 @@ export class EditPoint extends AbstractSmartComponent {
     const id = Date.now() + Math.random().toFixed(0);
     const date_from = new Date(formData.get("event-start-time"));
     const date_to = new Date(formData.get("event-end-time"));
-    const destinationName = formData.get("event-destination");    
+
+    let  destination = {};
+    destination.name = formData.get("event-destination");
+    const allDests = this._pointsModel.getDestinations();
+    const currentDestinationIndex = allDests.findIndex(
+      (dest) => dest.name == destination.name
+    );
+    destination.description = allDests[currentDestinationIndex].description;
+    destination.pictures = allDests[currentDestinationIndex].pictures.slice();
+  
+
     const is_favorite = formData.get("event-favorite") == `on` ? true : false;
     const type = this._eventType;
 
     const resultOffersArr = [];
     const formOffers = formData.getAll("event-offer-luggage");
-    const typeEvents = EVENT_OFFERS.find((it) => {
+    // const typeEvents = EVENT_OFFERS.find((it) => {
+    //   return it.type == type;
+    // });
+    const typeEvents = this._pointsModel.getOffers().find((it) => {
       return it.type == type;
     });
     formOffers.forEach((it) => {
-
-      const obj = { title: typeEvents.offers[Number(it)].title,
-      price: typeEvents.offers[Number(it)].price
-     };
+      const obj = {
+        title: typeEvents.offers[Number(it)].title,
+        price: typeEvents.offers[Number(it)].price,
+      };
       resultOffersArr.push(obj);
-    })
-    ;
+    });
     const offers = resultOffersArr;
     return {
       id,
       base_price,
       date_from,
       date_to,
-      destinationName,
+      destination,
       is_favorite,
       type,
-      offers
+      offers,
     };
   }
 
@@ -341,12 +359,11 @@ export class EditPoint extends AbstractSmartComponent {
     });
   }
 
-  getDestinationObject(cityName) {    
+  getDestinationObject(cityName) {
     //const dests = getDestinations();
     const dests = this._pointsModel.getDestinations();
     const myDestIndex = dests.findIndex((it) => it.name === cityName);
     return dests[myDestIndex];
-    
   }
 
   setCityChangeHandler() {
@@ -355,7 +372,7 @@ export class EditPoint extends AbstractSmartComponent {
     );
     cityInput.addEventListener(`change`, (e) => {
       const cityName = e.target.value;
-      const dests = getDestinations();
+      const dests = this._pointsModel.getDestinations();
       const myDestIndex = dests.findIndex((it) => it.name === cityName);
       this._destination = dests[myDestIndex];
       this.rerender();

@@ -5,13 +5,14 @@ import { Menu } from "./components/menu";
 import { Stats } from "./components/stats";
 import { NewEventBtn } from "./components/newEventBtn";
 import { TripController } from "./controllers/tripController";
-import { render } from "./utils/render";
+import { remove, render } from "./utils/render";
 import { getDestinations, getPointMockArr } from "./components/mock/pointMock";
 import { PointsModel } from "./models/pointsModel";
 import { FilterController } from "./controllers/filterController";
 import { EVENT_OFFERS } from "./consts";
 import  API from "./api";
 import  {OnePointModel} from "./models/onePointModel";
+import { Loading } from "./components/loading";
 
 //const TRIP_EVENT_COUNT = 5;
 //const points = getPointMockArr(TRIP_EVENT_COUNT);
@@ -41,7 +42,6 @@ const filterController = new FilterController(tripControls, pointsModel);
 
 
 pointsModel.setDestinations(getDestinations());
-pointsModel.setOffers(EVENT_OFFERS);
 
 ///
 const tripEvents = document.querySelector(`.trip-events`)
@@ -51,45 +51,63 @@ const tripController = new TripController(tripEvents, pointsModel);
 //tripController.render();
 
 const statsComponent = new Stats(pointsModel); 
+statsComponent.hide();
 render(bodyContainer, statsComponent, `beforeEnd`);
 
-
-menuComponent.setMenuItemClickHandler((id)=>{
-  switch(id) {
-    case `table`: 
-    statsComponent.hide();
-    tripController.show();
-    
-    break;
-    case `stats`:     
-    statsComponent.show();    
-    tripController.hide();
-  }
-})
 
 eventBtn.setBtnClickHandler(tripController.createPoint);
 
 const api = new API(`points`);
+const apiOffers = new API(`offers`);
+const apiDests = new API(`destinations`);
+
+const loading = new Loading();
+render(tripEvents, loading, `beforeEnd`);
 
 
-api
+//pointsModel.setOffers(EVENT_OFFERS);
+
+apiOffers
   .getDataFromServer()
+  .then((offers) => {
+    console.log("пришли такие офферы: ", offers);
+    pointsModel.setOffers(offers);
+  })
+apiDests
+  .getDataFromServer()
+  .then((dests) => {
+    console.log("пришли такие дестинейшены: ", dests);
+    pointsModel.setDestinations(dests);
+  })
+
+  .then(() => api.getDataFromServer())
   .then((points) => {
     console.log("пришли такие поинты: ", points);
     pointsModel.setPoints(OnePointModel.parsePoints(points));
   })
-  
+
   .then(() => {
+    remove(loading);
     filterController.render();
     tripController.render();
-    statsComponent.render();
-    statsComponent.hide();
+    statsComponent.render();        
   });
   
 
 
 
+menuComponent.setMenuItemClickHandler((id) => {
+  switch (id) {
+    case `table`:
+      statsComponent.hide();
+      tripController.show();
 
+      break;
+    case `stats`:
+      statsComponent.show();
+      tripController.hide();
+  }
+});
 
 
 
@@ -108,3 +126,5 @@ api
   // .then((data) => {
   //   console.log(data);
   // });
+
+
