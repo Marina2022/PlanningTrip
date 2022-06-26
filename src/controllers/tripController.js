@@ -126,30 +126,61 @@ export class TripController {
       
       if (newPoint == null) {
         pointController.destroy();
-
         this.updateAllTrips();
         return;
       }
       //новый поинт
-      this._api.addPoint(newPoint)
-      .then((newPoint) => {
-        this._pointsModel.addPoint(newPoint);
-        pointController.render(newPoint, pointControllerModes.DEFAULT);
-        this.updateAllTrips();
-      });
-
-      
-      //return;
+       pointController.pointEdit
+         .getElem()
+         .querySelector(".event__save-btn").innerText = "Saving...";
+      this._api
+        .addPoint(newPoint)
+        .then((newPoint) => {
+          this._pointsModel.addPoint(newPoint);
+          pointController.render(newPoint, pointControllerModes.DEFAULT);
+          this.updateAllTrips();
+        })
+        .catch((err) => {
+          console.log("из кэча ошибка", err);
+          pointController.pointEdit.getElem().classList.add("shake");
+          setTimeout(() => {
+            pointController.pointEdit.getElem().classList.remove("shake");
+            pointController.pointEdit
+              .getElem()
+              .querySelector(".event__save-btn").innerText = "Save";
+          }, 1000);
+        });
+     
     } else if (newPoint == null) {
-      this._api.deletePoint(oldPoint.id)
-      .then(() => {
-        this._pointsModel.removePoint(oldPoint.id);
-        this.updateAllTrips();
-      });
+    
+      pointController.pointEdit
+        .getElem()
+        .querySelector(".event__reset-btn").innerText = "Deleting...";
       
-      //return;
+      this._api
+        .deletePoint(oldPoint.id)
+        .then(() => {
+          
+          this._pointsModel.removePoint(oldPoint.id);
+          pointController.onCloseClick();
+          this.updateAllTrips();
+        })
+        .catch((err) => {
+          console.log("из кэча ошибка", err);
+          pointController.pointEdit.getElem().classList.add("shake");
+          setTimeout(() => {
+            pointController.pointEdit.getElem().classList.remove("shake");
+            pointController.pointEdit
+              .getElem()
+              .querySelector(".event__reset-btn").innerText = "Delete";
+          }, 1000);
+        });
+      
     } else {
       // Замена
+      pointController.pointEdit
+        .getElem()
+        .querySelector(".event__save-btn").innerText = "Saving...";
       this._api
         .updatePoint(oldPoint.id, newPoint)
         .then((newPointFromServer) => {
@@ -159,9 +190,18 @@ export class TripController {
             pointControllerModes.DEFAULT
           );
           if (!favor) this.updateAllTrips();
+        })
+        .catch((err) => {
+          console.log('из кэча ошибка', err);
+          pointController.pointEdit.getElem().classList.add('shake');          
+          setTimeout(()=>{
+            pointController.pointEdit.getElem().classList.remove("shake");
+            pointController.pointEdit
+              .getElem()
+              .querySelector(".event__save-btn").innerText = "Save";
+          },1000);
         });
       
-      //return;
     }
   };
 

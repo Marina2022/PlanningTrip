@@ -304,6 +304,7 @@ export class EditPoint extends AbstractSmartComponent {
     this._submitHandler = cb;
     this.getElem().addEventListener("submit", (e) => {
       e.preventDefault();
+      
       cb();
     });
   }
@@ -339,8 +340,7 @@ export class EditPoint extends AbstractSmartComponent {
     const favorBtn = this.getElem().querySelector(`.event__favorite-checkbox`);
     if (favorBtn) {
       favorBtn.addEventListener("change", () => {
-        cb();
-        //pointController.render(newPoint);
+        cb();        
       });
     }
   }

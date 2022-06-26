@@ -54,25 +54,21 @@ export class PointController {
     this.pointCard.setEditBtnHandler(this.onOpenBtnClick);
     this.pointEdit.setBtnHandlers(this.onCloseClick);
 
-    this.pointEdit.setSubmitHandler(()=>{
-      
-      const newPoint = this.pointEdit.getFormData();       
-      this._onDataChange(this, this._point, newPoint);
-      
-      //this.onCloseClick();  // вроде не влияет ни на че
+    this.pointEdit.setSubmitHandler(()=>{           
+      const newPoint = this.pointEdit.getFormData();        
+      this._onDataChange(this, this._point, newPoint);    
       
     }); 
 
     this.pointEdit.setDeleteHandler(()=>{
-      this.onCloseClick();
+      
       this._onDataChange(this, this._point, null);
     }); 
 
     
-    this.pointEdit.setFavoriteHandler(()=>{
-      const newPoint = Object.assign({}, this._point, {
-        is_favorite: !this._point.is_favorite,
-      });
+    this.pointEdit.setFavoriteHandler(()=>{      
+      const newPoint = this._point.clone();
+      newPoint.is_favorite = !newPoint.is_favorite;
       const favor = true;
       this._onDataChange(this, this._point, newPoint, favor);
     });

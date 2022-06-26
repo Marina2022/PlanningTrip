@@ -6,16 +6,11 @@ import { Stats } from "./components/stats";
 import { NewEventBtn } from "./components/newEventBtn";
 import { TripController } from "./controllers/tripController";
 import { remove, render } from "./utils/render";
-import { getDestinations, getPointMockArr } from "./components/mock/pointMock";
 import { PointsModel } from "./models/pointsModel";
 import { FilterController } from "./controllers/filterController";
-import { EVENT_OFFERS } from "./consts";
 import  API from "./api";
 import  {OnePointModel} from "./models/onePointModel";
 import { Loading } from "./components/loading";
-
-//const TRIP_EVENT_COUNT = 5;
-//const points = getPointMockArr(TRIP_EVENT_COUNT);
 
 const pointsModel = new PointsModel();
 
@@ -72,24 +67,16 @@ render(tripEvents, loading, `beforeEnd`);
 apiOffers
   .getDataFromServer()
   .then((offers) => {
-    console.log("пришли такие офферы: ", offers);
     pointsModel.setOffers(offers);
   })
 apiDests
   .getDataFromServer()
   .then((dests) => {
-    console.log("пришли такие дестинейшены: ", dests);
     pointsModel.setDestinations(dests);
   })
 
   .then(() => api.getDataFromServer())
   .then((points) => {
-    console.log("пришли такие поинты: ", points);        
-    // points[0].base_price = 2000; 
-    // points[0].offers[0].id = 100; 
-    // api.updatePoint(0, points[0]);
-
-
     pointsModel.setPoints(OnePointModel.parsePoints(points));
   })
 

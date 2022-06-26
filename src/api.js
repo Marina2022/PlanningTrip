@@ -22,8 +22,9 @@ export default class API {
       method: `PUT`,
       body: JSON.stringify(newPoint.toRAW()),
     })
+      .then((resp) => resp.json())
       .then((data) => OnePointModel.parseOnePoint(data))
-      .then((resp) => resp.json());
+      
   }
 
   addPoint(newPoint) {
@@ -33,8 +34,9 @@ export default class API {
         method: `POST`,
         body: JSON.stringify(newPoint.toRAW()),
       })
+        .then((resp) => resp.json())
         .then((data) => OnePointModel.parseOnePoint(data))
-        .then((resp) => resp.json());
+        
   }
 
   deletePoint(id) {
@@ -46,7 +48,6 @@ export default class API {
 
   _load({
     headers = new Headers(),
-    //id = ``,
     url,
     method = `GET`,
     body = null,
