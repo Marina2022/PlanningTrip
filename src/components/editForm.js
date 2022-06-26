@@ -59,7 +59,7 @@ const generateDatalist = (cityArr) => {
   return `<datalist id="destination-list-1">${dataMarkup}</datalist>`;
 };
 
-const generateEventDestinationInfo = (dest) => {
+const createEventDestinationInfo = (dest) => {
   if (dest == null) return ``;
   const { description, name, pictures } = dest;
   return `              
@@ -103,13 +103,14 @@ export class EditPoint extends AbstractSmartComponent {
     this._deleteHandler = null;
     this._destInput = null;
     this._eventType = this.point.type;  
-    this._destinationName = this.point.destinationName;
-    this._destinationName == ``
-      ? (this._destination = null)
-      : (this._destination = this.getDestinationObject(
-          this.point.destinationName
-        ));
-        
+    // this._destinationName = this.point.destinationName;
+    // this._destinationName == ``
+    //   ? (this._destination = null)
+    //   : (this._destination = this.getDestinationObject(
+    //       this.point.destinationName
+    //     ));
+    this._destination = this.point.destination;
+
     this._flatPickrs = [null, null];
     this._isNew = isNew;
 
@@ -118,7 +119,8 @@ export class EditPoint extends AbstractSmartComponent {
 
   resetForm = () => {
     this._eventType = this.point.type;
-    this._destination = this.getDestinationObject(this.point.destinationName);    
+    //this._destination = this.getDestinationObject(this.point.destinationName);    
+    this._destination = this.point.destination;    
     this.rerender();
   };
   getTemplate() {
@@ -229,7 +231,7 @@ export class EditPoint extends AbstractSmartComponent {
     </header>    
     <section class="event__details">
     ${generateEventDetails(offers, type)}
-    ${destination  ? generateEventDestinationInfo(destination) : ''}
+    ${destination  ? createEventDestinationInfo(destination) : ''}
     </section>
   </form>`;
   };

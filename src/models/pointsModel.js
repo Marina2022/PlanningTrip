@@ -40,7 +40,7 @@ export class PointsModel {
   }
 
   setPoints(points) {
-    this._points = Array.from(points);
+    this._points = points;
     //this._callDataChangeHanglers();
   }
 

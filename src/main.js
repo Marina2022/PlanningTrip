@@ -10,12 +10,13 @@ import { getDestinations, getPointMockArr } from "./components/mock/pointMock";
 import { PointsModel } from "./models/pointsModel";
 import { FilterController } from "./controllers/filterController";
 import { EVENT_OFFERS } from "./consts";
+import  API from "./api";
+import  {OnePointModel} from "./models/onePointModel";
 
-const TRIP_EVENT_COUNT = 5;
-const points = getPointMockArr(TRIP_EVENT_COUNT);
+//const TRIP_EVENT_COUNT = 5;
+//const points = getPointMockArr(TRIP_EVENT_COUNT);
 
 const pointsModel = new PointsModel();
-pointsModel.setPoints(points);
 
 const tripMain = document.querySelector(`.trip-main`);
 render(tripMain, new TripMain(), `afterBegin`);
@@ -37,7 +38,7 @@ render(tripControls, menuComponent, `beforeEnd`);
 
 
 const filterController = new FilterController(tripControls, pointsModel);
-filterController.render();
+
 
 pointsModel.setDestinations(getDestinations());
 pointsModel.setOffers(EVENT_OFFERS);
@@ -47,12 +48,11 @@ const tripEvents = document.querySelector(`.trip-events`)
 const bodyContainer = document.querySelector(`.page-main`);
 
 const tripController = new TripController(tripEvents, pointsModel);
-tripController.render();
+//tripController.render();
 
 const statsComponent = new Stats(pointsModel); 
 render(bodyContainer, statsComponent, `beforeEnd`);
-statsComponent.render();
-statsComponent.hide();
+
 
 menuComponent.setMenuItemClickHandler((id)=>{
   switch(id) {
@@ -68,6 +68,27 @@ menuComponent.setMenuItemClickHandler((id)=>{
 })
 
 eventBtn.setBtnClickHandler(tripController.createPoint);
+
+const api = new API(`points`);
+
+
+api
+  .getDataFromServer()
+  .then((points) => {
+    console.log("пришли такие поинты: ", points);
+    pointsModel.setPoints(OnePointModel.parsePoints(points));
+  })
+  
+  .then(() => {
+    filterController.render();
+    tripController.render();
+    statsComponent.render();
+    statsComponent.hide();
+  });
+  
+
+
+
 
 
 

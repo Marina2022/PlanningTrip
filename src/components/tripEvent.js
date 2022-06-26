@@ -25,8 +25,7 @@ const createTripEvent = (pointObj) => {
     base_price,
     date_from,
     date_to,
-    destinationName,
-    is_favorite,
+    destination,    
     offers,
     type,
   } = pointObj;
@@ -42,7 +41,7 @@ const createTripEvent = (pointObj) => {
       : EVENT_TYPES_IN.includes(type)
       ? `in`
       : ``
-  } ${destinationName}</h3>
+  } ${destination.name}</h3>
             <div class="event__schedule">
               <p class="event__time">
                 <time class="event__start-time" datetime="

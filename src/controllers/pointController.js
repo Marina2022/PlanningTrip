@@ -69,7 +69,8 @@ export class PointController {
       const newPoint = Object.assign({}, this._point, {
         is_favorite: !this._point.is_favorite,
       });
-      this._onDataChange(this, this._point, newPoint);
+      const favor = true;
+      this._onDataChange(this, this._point, newPoint, favor);
     });
     
     this.pointEdit.setEventTypeHandler();

@@ -78,7 +78,7 @@ export class TripController {
     );
     pointContr.render(emptyPoint, pointControllerModes.ADD, `afterbegin`);
     this._pointControllers.push(pointContr);
-    this._onViewChange(pointContr);  // ой не знаййю я
+    this._onViewChange(pointContr); // ой не знаййю я
   }
   updateAllTrips() {
     this._pointsModel.sortType = `event`;
@@ -119,7 +119,7 @@ export class TripController {
     }
   }
 
-  _onDataChange = (pointController, oldPoint, newPoint) => {
+  _onDataChange = (pointController, oldPoint, newPoint, favor = false) => {
     if (oldPoint == emptyPoint) {
       if (newPoint == null) {
         pointController.destroy();
@@ -130,16 +130,16 @@ export class TripController {
       this._pointsModel.addPoint(newPoint);
       pointController.render(newPoint, pointControllerModes.DEFAULT);
       this.updateAllTrips();
-      return;
+      //return;
     } else if (newPoint == null) {
       this._pointsModel.removePoint(oldPoint.id);
       this.updateAllTrips();
-      return;
+      //return;
     } else {
       this._pointsModel.updatePoints(oldPoint.id, newPoint);
       pointController.render(newPoint, pointControllerModes.DEFAULT);
-      this.updateAllTrips();
-      return;
+      if (!favor) this.updateAllTrips();
+      //return;
     }
   };
 
@@ -178,10 +178,10 @@ export class TripController {
   };
 
   hide() {
-    this._container.classList.add('visually-hidden');
+    this._container.classList.add("visually-hidden");
   }
   show() {
-    this._container.classList.remove('visually-hidden');
+    this._container.classList.remove("visually-hidden");
     this.updateAllTrips();
   }
 }
