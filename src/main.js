@@ -41,13 +41,18 @@ render(tripControls, menuComponent, `beforeEnd`);
 const filterController = new FilterController(tripControls, pointsModel);
 
 
-pointsModel.setDestinations(getDestinations());
+//pointsModel.setDestinations(getDestinations());
 
 ///
 const tripEvents = document.querySelector(`.trip-events`)
 const bodyContainer = document.querySelector(`.page-main`);
 
-const tripController = new TripController(tripEvents, pointsModel);
+const api = new API(`points`);
+const apiOffers = new API(`offers`);
+const apiDests = new API(`destinations`);
+
+
+const tripController = new TripController(tripEvents, pointsModel, api);
 //tripController.render();
 
 const statsComponent = new Stats(pointsModel); 
@@ -57,9 +62,6 @@ render(bodyContainer, statsComponent, `beforeEnd`);
 
 eventBtn.setBtnClickHandler(tripController.createPoint);
 
-const api = new API(`points`);
-const apiOffers = new API(`offers`);
-const apiDests = new API(`destinations`);
 
 const loading = new Loading();
 render(tripEvents, loading, `beforeEnd`);
@@ -82,7 +84,12 @@ apiDests
 
   .then(() => api.getDataFromServer())
   .then((points) => {
-    console.log("пришли такие поинты: ", points);
+    console.log("пришли такие поинты: ", points);        
+    // points[0].base_price = 2000; 
+    // points[0].offers[0].id = 100; 
+    // api.updatePoint(0, points[0]);
+
+
     pointsModel.setPoints(OnePointModel.parsePoints(points));
   })
 

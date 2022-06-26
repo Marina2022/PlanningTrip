@@ -7,7 +7,11 @@ export const emptyPoint = {
   base_price: 0,
   date_from: new Date(),
   date_to: new Date(),
-  destinationName: ``,
+  destination: 
+  {name: ``,
+  description: ``,
+  pictures: []
+},
   is_favorite: false,
   offers: [],
   type: `taxi`,
@@ -52,7 +56,7 @@ export class PointController {
 
     this.pointEdit.setSubmitHandler(()=>{
       
-      const newPoint = this.pointEdit.getFormData();        
+      const newPoint = this.pointEdit.getFormData();       
       this._onDataChange(this, this._point, newPoint);
       
       //this.onCloseClick();  // вроде не влияет ни на че

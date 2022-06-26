@@ -17,4 +17,21 @@ export class OnePointModel {
   static parsePoints(points) {
     return points.map((point) => OnePointModel.parseOnePoint(point));
   }
+
+  toRAW(){        
+    return {
+      id: this.id,
+      base_price: this.base_price,
+      date_from: this.date_from.toISOString(),
+      date_to: this.date_to.toISOString(),
+      destination: this.destination,
+      is_favorite: this.is_favorite,
+      offers: this.offers,
+      type: this.type,
+    };    
+  }
+
+  clone() {
+    return new OnePointModel(this.toRAW());
+  }
 }

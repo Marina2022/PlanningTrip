@@ -6,8 +6,10 @@ import { emptyPoint, modes as pointControllerModes, PointController } from "./po
 
 
 
+
 export class TripController {
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, api) {
+    this._api = api;
     this._pointsModel = pointsModel;
     this._container = container;
     this._noEvents = new NoEvents();
@@ -121,24 +123,44 @@ export class TripController {
 
   _onDataChange = (pointController, oldPoint, newPoint, favor = false) => {
     if (oldPoint == emptyPoint) {
+      
       if (newPoint == null) {
         pointController.destroy();
 
         this.updateAllTrips();
         return;
       }
-      this._pointsModel.addPoint(newPoint);
-      pointController.render(newPoint, pointControllerModes.DEFAULT);
-      this.updateAllTrips();
+      //новый поинт
+      this._api.addPoint(newPoint)
+      .then((newPoint) => {
+        this._pointsModel.addPoint(newPoint);
+        pointController.render(newPoint, pointControllerModes.DEFAULT);
+        this.updateAllTrips();
+      });
+
+      
       //return;
     } else if (newPoint == null) {
-      this._pointsModel.removePoint(oldPoint.id);
-      this.updateAllTrips();
+      this._api.deletePoint(oldPoint.id)
+      .then(() => {
+        this._pointsModel.removePoint(oldPoint.id);
+        this.updateAllTrips();
+      });
+      
       //return;
     } else {
-      this._pointsModel.updatePoints(oldPoint.id, newPoint);
-      pointController.render(newPoint, pointControllerModes.DEFAULT);
-      if (!favor) this.updateAllTrips();
+      // Замена
+      this._api
+        .updatePoint(oldPoint.id, newPoint)
+        .then((newPointFromServer) => {
+          this._pointsModel.updatePoints(oldPoint.id, newPointFromServer);
+          pointController.render(
+            newPointFromServer,
+            pointControllerModes.DEFAULT
+          );
+          if (!favor) this.updateAllTrips();
+        });
+      
       //return;
     }
   };

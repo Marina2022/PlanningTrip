@@ -30,7 +30,7 @@ const getRandomPhotoArr = ()=> {
   return photoArr;
 }
 
-export const generateOffers = (type)=>{
+const generateOffers = (type)=>{
   let initialArray = EVENT_OFFERS.find((item)=>{
     return item.type === type;
   });  
@@ -62,7 +62,7 @@ const generateDateObj = () => {
   
 }
 
-export const getPointMockArr = (count) => {
+const getPointMockArr = (count) => {
   
   const pointArr = [];
   for (let i = 0; i < count; i++) {
@@ -86,7 +86,7 @@ export const getPointMockArr = (count) => {
   return pointArr;
 };
 
-export const getDestinations = () => {
+const getDestinations = () => {
   const result =  CITIES.map(city => {
     return {
         description: getRandomDesc(TripDescriptions),

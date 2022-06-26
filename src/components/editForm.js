@@ -8,6 +8,7 @@ import {
   EVENT_OFFERS,
 } from "../consts";
 import { getDate, getTime } from "../utils/date";
+import { OnePointModel } from "../models/onePointModel";
 //import {getDestinations} from "./mock/pointMock"
 
 
@@ -255,8 +256,8 @@ export class EditPoint extends AbstractSmartComponent {
   getFormData() {
     const formData = new FormData(this.getElem());
 
-    const base_price = formData.get("event-price");
-    const id = Date.now() + Math.random().toFixed(0);
+    const base_price = +formData.get("event-price");
+    const id = this.point.id;
     const date_from = new Date(formData.get("event-start-time"));
     const date_to = new Date(formData.get("event-end-time"));
 
@@ -274,10 +275,7 @@ export class EditPoint extends AbstractSmartComponent {
     const type = this._eventType;
 
     const resultOffersArr = [];
-    const formOffers = formData.getAll("event-offer-luggage");
-    // const typeEvents = EVENT_OFFERS.find((it) => {
-    //   return it.type == type;
-    // });
+    const formOffers = formData.getAll("event-offer-luggage");    
     const typeEvents = this._pointsModel.getOffers().find((it) => {
       return it.type == type;
     });
@@ -285,11 +283,12 @@ export class EditPoint extends AbstractSmartComponent {
       const obj = {
         title: typeEvents.offers[Number(it)].title,
         price: typeEvents.offers[Number(it)].price,
+        id: 1,
       };
       resultOffersArr.push(obj);
     });
     const offers = resultOffersArr;
-    return {
+    return new OnePointModel({
       id,
       base_price,
       date_from,
@@ -298,7 +297,7 @@ export class EditPoint extends AbstractSmartComponent {
       is_favorite,
       type,
       offers,
-    };
+    });
   }
 
   setSubmitHandler(cb) {
