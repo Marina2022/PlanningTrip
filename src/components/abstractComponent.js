@@ -1,11 +1,13 @@
-import { createElement } from "../utils/render";
+import {createElement} from "../utils/render";
 
-export class AbstractComponent {  
+export class AbstractComponent {
   constructor() {
-    if (new.target === AbstractComponent) 
-    throw new Error(`you can't instantiate abstract class`);
+    if (new.target === AbstractComponent) {
+      throw new Error(`you can't instantiate abstract class`);
+    }
     this._elem = null;
   }
+
   getTemplate() {
     throw new Error(`you should implement method getTemplate for this class`);
   }
@@ -16,6 +18,7 @@ export class AbstractComponent {
     }
     return this._elem;
   }
+
   removeElem() {
     this._elem = null;
   }

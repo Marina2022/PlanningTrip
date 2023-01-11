@@ -1,9 +1,7 @@
-import {AbstractSmartComponent } from "./abstractSmartComponent";
+import {AbstractSmartComponent} from "./abstractSmartComponent";
 
 import Chart from "chart.js/auto";
-
 import ChartDataLabels from "chartjs-plugin-datalabels";
-
 
 
 const createStats = () => {
@@ -23,14 +21,15 @@ const createStats = () => {
     <canvas class="statistics__chart  statistics__chart--time" width="900"></canvas>
   </div>
 </section>
-  `
-}
+  `;
+};
 
 export class Stats extends AbstractSmartComponent {
   constructor(pointsModel) {
     super();
     this._pointsModel = pointsModel;
   }
+
   getTemplate() {
     return createStats();
   }
@@ -50,193 +49,56 @@ export class Stats extends AbstractSmartComponent {
 
   render() {
     const moneyCtx = document.querySelector(`.statistics__chart--money`);
-    const transportCtx = document.querySelector(
-      `.statistics__chart--transport`
-    );
-    const timeSpendCtx = document.querySelector(`.statistics__chart--time`);
 
     // Рассчитаем высоту канваса в зависимости от того, сколько данных в него будет передаваться
-const BAR_HEIGHT = 55;
-moneyCtx.height = BAR_HEIGHT * 4;
-transportCtx.height = BAR_HEIGHT * 4;
-timeSpendCtx.height = BAR_HEIGHT * 4;
+    const BAR_HEIGHT = 55;
+    moneyCtx.height = BAR_HEIGHT * 4;
+
     const moneyChart = new Chart(moneyCtx, {
-      plugins: [ChartDataLabels],
-      type: `bar`,
-      data: {
-       labels: Object.keys(this.getMoneyPerTypeObject()),
-
-        datasets: [
-          {
-            data: Object.values(this.getMoneyPerTypeObject()), 
-            backgroundColor: `#ffffff`,
-            hoverBackgroundColor: `#ffffff`,
-            anchor: `start`,
-          },
-        ],
-      },
-      options: {
-        indexAxis: "y",
-        plugins: {
-          datalabels: {
+      plugins: [ChartDataLabels], type: `bar`, data: {
+        labels: Object.keys(this.getMoneyPerTypeObject()), datasets: [{
+          data: Object.values(this.getMoneyPerTypeObject()),
+          backgroundColor: `#ffffff`,
+          hoverBackgroundColor: `#ffffff`,
+          anchor: `start`,
+        }],
+      }, options: {
+        indexAxis: `y`, plugins: {
+          legend: {
+            display: false,
+          }, title: {
+            display: true, text: `Transport Сosts`,
             font: {
-              size: 13,
-            },
-            color: `#000000`,
-            anchor: "end",
-            align: "start",
-            formatter: (val) => `€ ${val}`,
-          },
-        },
-        title: {
-          display: true,
-          text: `MONEY`,
-          fontColor: `#000000`,
-          fontSize: 23,
-          position: `left`,
-        },
-        // scales: {
-        //   yAxes: [{
-        //     ticks: {
-        //       fontColor: `#000000`,
-        //       padding: 5,
-        //       fontSize: 13,
-        //     },
-        //     gridLines: {
-        //       display: false,
-        //       drawBorder: false
-        //     },
-        //     barThickness: 44,
-        //   }],
-        //   xAxes: [{
-        //   ticks: {
-        //     display: false,
-        //     beginAtZero: true,
-        //   },
-        //   gridLines: {
-        //     display: false,
-        //     drawBorder: false
-        //   },
-        //   minBarLength: 50
-        //   }],
-        // },
-        yAxes: [
-          {
-            stacked: false,
-            scaleLabel: {
-              display: true,
-              fontColor: "white",
-              fontSize: 25,
-              labelString: "Faction Points",
-            },
-            ticks: {
-              fontColor: "white",
-              fontSize: 20,
-              min: 0,
-            },
-            gridLines: {
-              color: "white",
-            },
-          },
-        ],
-        xAxes: [
-          {
-            stacked: false,
-            scaleLabel: {
-              display: true,
-              fontColor: "white",
-              fontSize: 25,
-              labelString: "Day",
-            },
-            ticks: {
-              fontColor: "white",
-              fontSize: 20,
-              min: 0,
-            },
-          },
-        ],
-        legend: {
-          display: false,
-        },
-        tooltips: {
-          enabled: false,
-        },
-      },
-    });
+              size: 18, color: `#d55555`,
+            }
 
-    const transportChart = new Chart(transportCtx, {
-      plugins: [ChartDataLabels],
-      type: `bar`,
-      data: {
-        labels: [`FLY`, `DRIVE`, `RIDE`],
-        datasets: [
-          {
-            data: [4, 2, 1],
-            backgroundColor: `#ffffff`,
-            hoverBackgroundColor: `#ffffff`,
-            anchor: `start`,
-          },
-        ],
-      },
-      options: {
-        indexAxis: "y",
-        plugins: {
-          datalabels: {
+          }, datalabels: {
             font: {
-              size: 13,
-            },
-            color: `#000000`,
-            anchor: "end",
-            align: "start",
-            formatter: (val) => `${val}x`,
+              size: 13, color: `#d55555`,
+            }, color: `#555555`, anchor: `center`, align: `start`, formatter: (val) => `€ ${val}`,
           },
-        },
-        title: {
-          display: true,
-          text: `TRANSPORT`,
-          fontColor: `#000000`,
-          fontSize: 23,
-          position: `left`,
-        },
-        scales: {
-          // yAxes: [
-          //   {
-          //     ticks: {
-          //       fontColor: `#000000`,
-          //       padding: 5,
-          //       fontSize: 13,
-          //     },
-          //     gridLines: {
-          //       display: false,
-          //       drawBorder: false,
-          //     },
-          //     barThickness: 44,
-          //   },
-          // ],
-          // xAxes: [
-          //   {
-          //     ticks: {
-          //       display: false,
-          //       beginAtZero: true,
-          //     },
-          //     gridLines: {
-          //       display: false,
-          //       drawBorder: false,
-          //     },
-          //     minBarLength: 50,
-          //   },
-          // ],
-        },
-        legend: {
+        }, title: {
+          display: true, text: `MONEY`, fontColor: `#000000`, fontSize: 23, position: `left`,
+        }, yAxes: [{
+          stacked: false, scaleLabel: {
+            display: true, fontColor: `white`, fontSize: 25, labelString: `Faction Points`,
+          }, ticks: {
+            fontColor: `white`, fontSize: 20, min: 0,
+          }, gridLines: {
+            color: `white`,
+          },
+        }], xAxes: [{
+          stacked: false, scaleLabel: {
+            display: true, fontColor: `white`, fontSize: 25, labelString: `Day`,
+          }, ticks: {
+            fontColor: `white`, fontSize: 20, min: 0,
+          },
+        }], legend: {
           display: false,
-        },
-        tooltips: {
+        }, tooltips: {
           enabled: false,
         },
       },
     });
   }
 }
-
-
-

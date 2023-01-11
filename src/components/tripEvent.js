@@ -1,10 +1,10 @@
-import { AbstractComponent } from "./abstractComponent";
-import { getTime, getTimeDiff } from "../utils/date";
-import { EVENT_TYPES_TO, EVENT_TYPES_IN } from "../consts";
+import {AbstractComponent} from "./abstractComponent";
+import {getTime, getTimeDiff} from "../utils/date";
+import {EVENT_TYPES_TO, EVENT_TYPES_IN} from "../consts";
 
 const generateOffers = (offers) => {
   let i = 0;
-  let html = "";
+  let html = ``;
   for (const offer of offers) {
     i++;
 
@@ -15,7 +15,9 @@ const generateOffers = (offers) => {
         >
       </li>
       `;
-    if (i >= 3) break;
+    if (i >= 3) {
+      break;
+    }
   }
   return html;
 };
@@ -25,7 +27,7 @@ const createTripEvent = (pointObj) => {
     base_price,
     date_from,
     date_to,
-    destination,    
+    destination,
     offers,
     type,
   } = pointObj;
@@ -39,8 +41,8 @@ const createTripEvent = (pointObj) => {
     EVENT_TYPES_TO.includes(type)
       ? `to`
       : EVENT_TYPES_IN.includes(type)
-      ? `in`
-      : ``
+        ? `in`
+        : ``
   } ${destination.name}</h3>
             <div class="event__schedule">
               <p class="event__time">
@@ -48,7 +50,7 @@ const createTripEvent = (pointObj) => {
                 ${date_from}">${getTime(date_from)} </time>
                 &mdash;
                 <time class="event__end-time" datetime="${date_to}">${getTime(
-    date_to
+    date_to,
   )}</time>
               </p>
               <p class="event__duration">${getTimeDiff(date_from, date_to)}</p>
@@ -73,6 +75,7 @@ export class TripEvent extends AbstractComponent {
     super();
     this.point = point;
   }
+
   getTemplate() {
     return createTripEvent(this.point);
   }

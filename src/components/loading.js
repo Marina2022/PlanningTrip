@@ -1,4 +1,4 @@
-import { AbstractSmartComponent } from "./abstractSmartComponent";
+import {AbstractSmartComponent} from "./abstractSmartComponent";
 
 const createLoading = () => {
   return `<div><h2 class="visually-hidden">Trip events</h2>

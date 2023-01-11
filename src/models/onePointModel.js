@@ -18,7 +18,7 @@ export class OnePointModel {
     return points.map((point) => OnePointModel.parseOnePoint(point));
   }
 
-  toRAW(){        
+  toRAW() {
     return {
       id: this.id,
       base_price: this.base_price,
@@ -28,7 +28,7 @@ export class OnePointModel {
       is_favorite: this.is_favorite,
       offers: this.offers,
       type: this.type,
-    };    
+    };
   }
 
   clone() {

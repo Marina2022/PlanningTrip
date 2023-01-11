@@ -1,134 +1,134 @@
 export const EVENT_TYPES = [
-  "taxi",
-  "bus",
-  "train",
-  "ship",
-  "transport",
-  "drive",
-  "flight",
-  "check-in",
-  "sightseeing",
-  "restaurant",
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
+  `check-in`,
+  `sightseeing`,
+  `restaurant`,
 ];
 
-export const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug"];
+export const MONTHS = [`Jan`, `Feb`, `Mar`, `Apr`, `May`, `June`, `July`, `Aug`];
 
 export const EVENT_TYPES_IN = [
-  "check-in",
-  "sightseeing",
-  "restaurant",
+  `check-in`,
+  `sightseeing`,
+  `restaurant`,
 ];
 
 export const EVENT_TYPES_TO = [
-  "taxi",
-  "bus",
-  "train",
-  "ship",
-  "transport",
-  "drive",
-  "flight", 
+  `taxi`,
+  `bus`,
+  `train`,
+  `ship`,
+  `transport`,
+  `drive`,
+  `flight`,
 ];
 
 export const EVENT_OFFERS = [
   {
-    type: "taxi",
+    type: `taxi`,
     offers: [
       {
-        title: "Upgrade to a business class",
+        title: `Upgrade to a business class`,
         price: 120,
       },
       {
-        title: "Choose the radio station",
+        title: `Choose the radio station`,
         price: 30,
       },
     ],
   },
   {
-    type: "transport",
+    type: `transport`,
     offers: [
       {
-        title: "Upgrade to a business class",
+        title: `Upgrade to a business class`,
         price: 120,
       },
       {
-        title: "Choose the radio station",
+        title: `Choose the radio station`,
         price: 30,
       },
     ],
   },
   {
-    type: "check-in",
+    type: `check-in`,
     offers: [
       {
-        title: "Upgrade to a business class",
+        title: `Upgrade to a business class`,
         price: 120,
       },
       {
-        title: "Choose the radio station",
+        title: `Choose the radio station`,
         price: 30,
       },
     ],
   },
   {
-    type: "bus",
+    type: `bus`,
     offers: [
       {
-        title: "Upgrade to a business class",
+        title: `Upgrade to a business class`,
         price: 180,
       },
       {
-        title: "Choose the radio station",
+        title: `Choose the radio station`,
         price: 30,
       },
     ],
   },
   {
-    type: "flight",
+    type: `flight`,
     offers: [
       {
-        title: "Upgrade to a business class",
+        title: `Upgrade to a business class`,
         price: 170,
       },
       {
-        title: "Free drinks",
+        title: `Free drinks`,
         price: 100,
       },
       {
-        title: "Blankets",
+        title: `Blankets`,
         price: 50,
       },
       {
-        title: "TV",
+        title: `TV`,
         price: 10,
       },
     ],
   },
   {
-    type: "train",
+    type: `train`,
     offers: [
       {
-        title: "Lunch",
+        title: `Lunch`,
         price: 220,
       },
       {
-        title: "TV",
+        title: `TV`,
         price: 20,
       },
     ],
   },
   {
-    type: "drive",
+    type: `drive`,
     offers: [
       {
-        title: "good company",
+        title: `good company`,
         price: 100,
       },
       {
-        title: "conditioner",
+        title: `conditioner`,
         price: 20,
       },
       {
-        title: "music",
+        title: `music`,
         price: 205,
       },
     ],

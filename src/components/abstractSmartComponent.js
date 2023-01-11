@@ -1,9 +1,6 @@
-import {AbstractComponent} from "./abstractComponent"
+import {AbstractComponent} from "./abstractComponent";
 
 export class AbstractSmartComponent extends AbstractComponent {
-  // constructor(){
-  //   super();
-  // }
   rerender() {
     const oldELem = this._elem;
     this.removeElem();
@@ -19,6 +16,7 @@ export class AbstractSmartComponent extends AbstractComponent {
   hide() {
     this.getElem().classList.add(`visually-hidden`);
   }
+
   show() {
     this.getElem().classList.remove(`visually-hidden`);
   }
