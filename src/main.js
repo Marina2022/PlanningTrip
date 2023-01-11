@@ -20,11 +20,7 @@ render(tripMain, new TripMain(), `afterBegin`);
 const eventBtn = new NewEventBtn();
 render(tripMain, eventBtn, `beforeEnd`);
 
-// tripMainInfoCont - контейнер для названия и цены в хедере
-const tripMainContainer = document.querySelector(`.trip-info`);
-
-// render(tripMainContainer, new TripMainCost(), `afterBegin`);
-// render(tripMainContainer, new TripMainInfo(), `afterBegin`);
+export const tripMainContainer = document.querySelector(`.trip-info`);
 
 const tripControls = document.querySelector(`.trip-controls`);
 tripControls.innerHTML = ``;
@@ -32,9 +28,7 @@ tripControls.innerHTML = ``;
 const menuComponent = new Menu();
 render(tripControls, menuComponent, `beforeEnd`);
 
-
 const filterController = new FilterController(tripControls, pointsModel);
-
 
 const tripEvents = document.querySelector(`.trip-events`);
 const bodyContainer = document.querySelector(`.page-main`);
@@ -43,16 +37,13 @@ const api = new API(`points`);
 const apiOffers = new API(`offers`);
 const apiDests = new API(`destinations`);
 
-
 const tripController = new TripController(tripEvents, pointsModel, api);
 
 const statsComponent = new Stats(pointsModel);
 statsComponent.hide();
 render(bodyContainer, statsComponent, `beforeEnd`);
 
-
 eventBtn.setBtnClickHandler(tripController.createPoint);
-
 
 const loading = new Loading();
 render(tripEvents, loading, `beforeEnd`);
@@ -63,21 +54,22 @@ apiOffers
     pointsModel.setOffers(offers);
   });
 
+export const tripMainCostElement = new TripMainCost();
+export const TripMainInfoElement = new TripMainInfo();
+
 apiDests
   .getDataFromServer()
   .then((dests) => {
     pointsModel.setDestinations(dests);
   })
-
   .then(() => api.getDataFromServer())
   .then((points) => {
     pointsModel.setPoints(OnePointModel.parsePoints(points));
   })
-
   .then(() => {
     remove(loading);
-    render(tripMainContainer, new TripMainCost(), `afterBegin`);
-    render(tripMainContainer, new TripMainInfo(), `afterBegin`);
+    render(tripMainContainer, tripMainCostElement, `afterBegin`);
+    render(tripMainContainer, TripMainInfoElement, `afterBegin`);
     filterController.render();
     tripController.render();
     statsComponent.render();

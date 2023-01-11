@@ -1,10 +1,9 @@
-import { SortingForm } from "../components/sortingForm";
-import { tripDay } from "../components/tripDay";
-import { NoEvents } from "../components/noEventsMsg";
-import { render } from "../utils/render";
-import { emptyPoint, modes as pointControllerModes, PointController } from "./pointController";
-
-
+import {SortingForm} from "../components/sortingForm";
+import {tripDay} from "../components/tripDay";
+import {NoEvents} from "../components/noEventsMsg";
+import {render} from "../utils/render";
+import {emptyPoint, modes as pointControllerModes, PointController} from "./pointController";
+import {tripMainContainer, tripMainCostElement, TripMainInfoElement} from "../main";
 
 
 export class TripController {
@@ -13,7 +12,7 @@ export class TripController {
     this._pointsModel = pointsModel;
     this._container = container;
     this._noEvents = new NoEvents();
-    this._sortingForm = null; // new SortingForm(this._pointsModel);
+    this._sortingForm = null;
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._pointControllers = [];
@@ -29,7 +28,6 @@ export class TripController {
       return;
     }
 
-    // массив пойнтов не пустой:
     this._sortingForm = new SortingForm(this._pointsModel);
     render(tripEvents, this._sortingForm, `beforeEnd`);
 
@@ -43,7 +41,7 @@ export class TripController {
 
       const sortedPoints = this.getSortedPoints(sortType);
 
-      if (sortType == "event") {
+      if (sortType === "event") {
         this._sortingForm = new SortingForm(this._pointsModel);
         render(tripEvents, this._sortingForm, `beforeEnd`);
         this.renderTripDays(this._pointsModel.getPoints(), tripEvents);
@@ -59,15 +57,12 @@ export class TripController {
           this._onDataChange,
           this._onViewChange,
           false,
-          this._pointsModel
-        );
+          this._pointsModel);
         pointContr.render(point, pointControllerModes.DEFAULT);
         this._pointControllers.push(pointContr);
       });
     });
-
     this.renderTripDays(this._pointsModel.getPoints(), tripEvents);
-    /// [setBtnClickHandler]
   }
 
   createPoint() {
@@ -76,12 +71,23 @@ export class TripController {
       this._onDataChange,
       this._onViewChange,
       true,
-      this._pointsModel
-    );
+      this._pointsModel);
+
     pointContr.render(emptyPoint, pointControllerModes.ADD, `afterbegin`);
     this._pointControllers.push(pointContr);
     this._onViewChange(pointContr); // ой не знаййю я
   }
+
+  updateHeader() {
+    tripMainContainer.innerHTML = ``;
+    TripMainInfoElement.removeElem();
+    TripMainInfoElement.getElem();
+    render(tripMainContainer, TripMainInfoElement, `afterBegin`);
+    tripMainCostElement.removeElem();
+    tripMainCostElement.getElem();
+    render(tripMainContainer, tripMainCostElement, `beforeEnd`);
+  }
+
   updateAllTrips() {
     this._pointsModel.sortType = `event`;
     this._sortingForm._sortType = `event`;
@@ -101,7 +107,7 @@ export class TripController {
 
     for (let i = 0; i < filteredDates.length; i++) {
       const dateArr = points.filter(
-        (item) => item.date_from.toDateString() == filteredDates[i]
+        (item) => item.date_from.toDateString() === filteredDates[i],
       );
       const dateForRender = dateArr[0].date_from;
       const tripOneDay = new tripDay(i + 1, dateForRender);
@@ -113,7 +119,7 @@ export class TripController {
           this._onDataChange,
           this._onViewChange,
           false,
-          this._pointsModel
+          this._pointsModel,
         );
         pointContr.render(point, pointControllerModes.DEFAULT);
         this._pointControllers.push(pointContr);
@@ -121,18 +127,18 @@ export class TripController {
     }
   }
 
-  _onDataChange = (pointController, oldPoint, newPoint, favor = false) => {
-    if (oldPoint == emptyPoint) {
-      
-      if (newPoint == null) {
+  _onDataChange(pointController, oldPoint, newPoint, favor = false) {
+    if (!newPoint.destination) throw new Error()
+    if (oldPoint === emptyPoint) {
+      // delete point
+      if (newPoint === null) {
         pointController.destroy();
         this.updateAllTrips();
         return;
       }
-      //новый поинт
-       pointController.pointEdit
-         .getElem()
-         .querySelector(".event__save-btn").innerText = "Saving...";
+      pointController.pointEdit
+        .getElem()
+        .querySelector(".event__save-btn").innerText = "Saving...";
       this._api
         .addPoint(newPoint)
         .then((newPoint) => {
@@ -140,8 +146,8 @@ export class TripController {
           pointController.render(newPoint, pointControllerModes.DEFAULT);
           this.updateAllTrips();
         })
+        .then(() => this.updateHeader())
         .catch((err) => {
-          console.log("из кэча ошибка", err);
           pointController.pointEdit.getElem().classList.add("shake");
           setTimeout(() => {
             pointController.pointEdit.getElem().classList.remove("shake");
@@ -150,23 +156,21 @@ export class TripController {
               .querySelector(".event__save-btn").innerText = "Save";
           }, 1000);
         });
-     
+      // new point
     } else if (newPoint == null) {
-    
       pointController.pointEdit
         .getElem()
         .querySelector(".event__reset-btn").innerText = "Deleting...";
-      
       this._api
         .deletePoint(oldPoint.id)
         .then(() => {
-          
           this._pointsModel.removePoint(oldPoint.id);
           pointController.onCloseClick();
           this.updateAllTrips();
         })
+        .then(() => this.updateHeader())
         .catch((err) => {
-          console.log("из кэча ошибка", err);
+          console.log("error", err);
           pointController.pointEdit.getElem().classList.add("shake");
           setTimeout(() => {
             pointController.pointEdit.getElem().classList.remove("shake");
@@ -175,9 +179,8 @@ export class TripController {
               .querySelector(".event__reset-btn").innerText = "Delete";
           }, 1000);
         });
-      
     } else {
-      // Замена
+      // edit point
       pointController.pointEdit
         .getElem()
         .querySelector(".event__save-btn").innerText = "Saving...";
@@ -187,25 +190,27 @@ export class TripController {
           this._pointsModel.updatePoints(oldPoint.id, newPointFromServer);
           pointController.render(
             newPointFromServer,
-            pointControllerModes.DEFAULT
+            pointControllerModes.DEFAULT,
           );
-          if (!favor) this.updateAllTrips();
+          if (!favor) {
+            this.updateAllTrips();
+          }
         })
+        .then(() => this.updateHeader())
         .catch((err) => {
-          console.log('из кэча ошибка', err);
-          pointController.pointEdit.getElem().classList.add('shake');          
-          setTimeout(()=>{
+          console.log("error", err);
+          pointController.pointEdit.getElem().classList.add("shake");
+          setTimeout(() => {
             pointController.pointEdit.getElem().classList.remove("shake");
             pointController.pointEdit
               .getElem()
               .querySelector(".event__save-btn").innerText = "Save";
-          },1000);
+          }, 1000);
         });
-      
     }
   };
 
-  _onViewChange = (currentController) => {
+  _onViewChange(currentController) {
     this._pointControllers.forEach((pointContr) => {
       if (pointContr !== currentController) {
         pointContr.setDefaultView();
@@ -214,15 +219,18 @@ export class TripController {
   };
 
   getSortedPoints = (sortType) => {
-    if (sortType == "event")
+    if (sortType === "event") {
       return this._pointsModel
         .getPoints()
         .slice()
         .sort((a, b) => {
-          if (a.destination.name > b.destination.name) return 1;
-          else return -1;
+          if (a.destination.name > b.destination.name) {
+            return 1;
+          } else {
+            return -1;
+          }
         });
-    else if (sortType == "time")
+    } else if (sortType === "time") {
       return this._pointsModel
         .getPoints()
         .slice()
@@ -230,18 +238,20 @@ export class TripController {
           const diff = b.date_to - b.date_from - (a.date_to - a.date_from);
           return diff;
         });
-    else if (sortType == "price")
+    } else if (sortType === "price") {
       return this._pointsModel
         .getPoints()
         .slice()
         .sort((a, b) => {
           return b.base_price - a.base_price;
         });
+    }
   };
 
   hide() {
     this._container.classList.add("visually-hidden");
   }
+
   show() {
     this._container.classList.remove("visually-hidden");
     this.updateAllTrips();

@@ -1,27 +1,24 @@
-import { AbstractSmartComponent } from "./abstractSmartComponent";
+import {AbstractSmartComponent} from "./abstractSmartComponent";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import {
   EVENT_TYPES_TO,
   EVENT_TYPES_IN,
-  CITIES,
-  EVENT_OFFERS,
+
 } from "../consts";
-import { getDate, getTime } from "../utils/date";
-import { OnePointModel } from "../models/onePointModel";
-//import {getDestinations} from "./mock/pointMock"
+import {getDate, getTime} from "../utils/date";
+import {OnePointModel} from "../models/onePointModel";
 
 
+const generateEventDetails = (selectedOffers, type, allPossibleOffers) => {
+  if (allPossibleOffers == undefined) {
+    return ``;
+  } // no additional services for this type
 
-
-const generateEventDetails = (selectedOffers, type, allPossibleOffers) => {  
-  if (allPossibleOffers == undefined)
-    return ``; // значит, нет офферов на этот тип события
-  
   const offerIndex = allPossibleOffers.findIndex(
-    (offerItem) => offerItem.type == type
+    (offerItem) => offerItem.type == type,
   );
-  allPossibleOffers = allPossibleOffers[offerIndex].offers; 
+  allPossibleOffers = allPossibleOffers[offerIndex].offers;
   const offerInnerHtml = allPossibleOffers
     .map((offer, index) => {
       return `
@@ -63,22 +60,23 @@ const generateDatalist = (cityArr) => {
 };
 
 const createEventDestinationInfo = (dest) => {
-  if (dest == null) return ``;
-  const { description, name, pictures } = dest;
+  if (!dest) {
+    return ``;
+  }
+  const {description, name, pictures} = dest;
   return `              
         <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">${name}</h3>
             <p class="event__destination-description">${description}</p>
-
             <div class="event__photos-container">
               <div class="event__photos-tape">
                 ${pictures
-                  .map((pict) => {
-                    return `
+    .map((pict) => {
+      return `
                     <img class="event__photo" src="${pict.src}" alt="${pict.description}">
                   `;
-                  })
-                  .join(`\n`)}
+    })
+    .join(`\n`)}
               </div>
             </div>
           </section>`;
@@ -116,12 +114,13 @@ export class EditPoint extends AbstractSmartComponent {
     this._destination = this.point.destination;
     this.rerender();
   };
+
   getTemplate() {
     return this.createEditForm(
       this.point,
       this._isNew,
       this._pointsModel.getOffers(),
-      this._pointsModel.getDestinations()
+      this._pointsModel.getDestinations(),
     );
   }
 
@@ -172,13 +171,13 @@ export class EditPoint extends AbstractSmartComponent {
       EVENT_TYPES_TO.includes(type)
         ? `to`
         : EVENT_TYPES_IN.includes(type)
-        ? `in`
-        : ``
+          ? `in`
+          : ``
     }
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
-          destination ? destination.name : ``
-        }" list="destination-list-1">
+      destination ? destination.name : ``
+    }" list="destination-list-1">
         
         ${generateDatalist(destinations.map((item) => item.name))}
         
@@ -190,15 +189,15 @@ export class EditPoint extends AbstractSmartComponent {
           From
         </label>
         <input data-input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${getDate(
-          date_from
-        )} ${getTime(date_from)}">
+      date_from,
+    )} ${getTime(date_from)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">
           To
         </label>
         <input data-input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${getDate(
-          date_to
-        )} ${getTime(date_to)}">
+      date_to,
+    )} ${getTime(date_to)}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -211,24 +210,24 @@ export class EditPoint extends AbstractSmartComponent {
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       
       ${
-        isNew
-          ? `<button class="event__reset-btn" type="reset">Cancel</button>`
-          : `<button class="event__reset-btn" type="reset">Delete</button>`
-      }     
+      isNew
+        ? `<button class="event__reset-btn" type="reset">Cancel</button>`
+        : `<button class="event__reset-btn" type="reset">Delete</button>`
+    }     
 
       ${
-        isNew
-          ? ``
-          : `  <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${
-              is_favorite ? `checked` : ``
-            }>
+      isNew
+        ? ``
+        : `  <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${
+          is_favorite ? `checked` : ``
+        }>
       <label class="event__favorite-btn" for="event-favorite-1">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
         </svg>
       </label>`
-      }
+    }
     
 
       <button class="event__rollup-btn" type="button">
@@ -261,23 +260,32 @@ export class EditPoint extends AbstractSmartComponent {
     const date_from = new Date(formData.get("event-start-time"));
     const date_to = new Date(formData.get("event-end-time"));
 
-    let  destination = {};
+    let destination = {};
     destination.name = formData.get("event-destination");
     const allDests = this._pointsModel.getDestinations();
     const currentDestinationIndex = allDests.findIndex(
-      (dest) => dest.name == destination.name
+      (dest) => dest.name === destination.name,
     );
-    destination.description = allDests[currentDestinationIndex].description;
-    destination.pictures = allDests[currentDestinationIndex].pictures.slice();
-  
 
-    const is_favorite = formData.get("event-favorite") == `on` ? true : false;
+
+    if (destination.name) {
+      destination.description = allDests[currentDestinationIndex].description;
+    } else destination.description = ``;
+
+    if (destination.name) {
+      destination.pictures = allDests[currentDestinationIndex].pictures.slice();
+    } else {
+      destination.pictures = [];
+    }
+
+
+    const is_favorite = formData.get("event-favorite") === `on` ? true : false;
     const type = this._eventType;
 
     const resultOffersArr = [];
-    const formOffers = formData.getAll("event-offer-luggage");    
+    const formOffers = formData.getAll("event-offer-luggage");
     const typeEvents = this._pointsModel.getOffers().find((it) => {
-      return it.type == type;
+      return it.type === type;
     });
     formOffers.forEach((it) => {
       const obj = {
@@ -304,7 +312,7 @@ export class EditPoint extends AbstractSmartComponent {
     this._submitHandler = cb;
     this.getElem().addEventListener("submit", (e) => {
       e.preventDefault();
-      
+
       cb();
     });
   }
@@ -327,7 +335,7 @@ export class EditPoint extends AbstractSmartComponent {
       cb();
     });
     this._destInput = this.getElem().querySelector(
-      ".event__input--destination"
+      ".event__input--destination",
     );
 
     this._destInput.addEventListener("focus", (e) => {
@@ -340,7 +348,7 @@ export class EditPoint extends AbstractSmartComponent {
     const favorBtn = this.getElem().querySelector(`.event__favorite-checkbox`);
     if (favorBtn) {
       favorBtn.addEventListener("change", () => {
-        cb();        
+        cb();
       });
     }
   }
@@ -367,7 +375,7 @@ export class EditPoint extends AbstractSmartComponent {
 
   setCityChangeHandler() {
     const cityInput = this.getElem().querySelector(
-      `.event__input--destination`
+      `.event__input--destination`,
     );
     cityInput.addEventListener(`change`, (e) => {
       const cityName = e.target.value;
@@ -395,5 +403,5 @@ export class EditPoint extends AbstractSmartComponent {
     });
   }
 }
-  
+
 
