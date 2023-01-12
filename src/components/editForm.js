@@ -11,12 +11,12 @@ import {OnePointModel} from "../models/onePointModel";
 
 
 const generateEventDetails = (selectedOffers, type, allPossibleOffers) => {
-  if (allPossibleOffers == undefined) {
+  if (allPossibleOffers === undefined) {
     return ``;
-  } // no additional services for this type
+  }
 
   const offerIndex = allPossibleOffers.findIndex(
-    (offerItem) => offerItem.type == type,
+    (offerItem) => offerItem.type === type,
   );
   allPossibleOffers = allPossibleOffers[offerIndex].offers;
   const offerInnerHtml = allPossibleOffers
@@ -152,7 +152,6 @@ export class EditPoint extends AbstractSmartComponent {
           <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
         </label>
         <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
-
         <div class="event__type-list">
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Transfer</legend>
@@ -164,7 +163,6 @@ export class EditPoint extends AbstractSmartComponent {
             </fieldset>
         </div>
       </div>
-
       <div class="event__field-group  event__field-group--destination">
         <label class="event__label  event__type-output" for="event-destination-1">
           ${type} ${
@@ -177,13 +175,9 @@ export class EditPoint extends AbstractSmartComponent {
         </label>
         <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${
       destination ? destination.name : ``
-    }" list="destination-list-1">
-        
-        ${generateDatalist(destinations.map((item) => item.name))}
-        
-        
+    }" list="destination-list-1">        
+        ${generateDatalist(destinations.map((item) => item.name))} 
       </div>
-
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">
           From
@@ -199,7 +193,6 @@ export class EditPoint extends AbstractSmartComponent {
       date_to,
     )} ${getTime(date_to)}">
       </div>
-
       <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-1">
           <span class="visually-hidden">Price</span>
@@ -207,14 +200,12 @@ export class EditPoint extends AbstractSmartComponent {
         </label>
         <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${base_price}">
       </div>
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      
+      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>      
       ${
       isNew
         ? `<button class="event__reset-btn" type="reset">Cancel</button>`
         : `<button class="event__reset-btn" type="reset">Delete</button>`
     }     
-
       ${
       isNew
         ? ``
@@ -227,14 +218,12 @@ export class EditPoint extends AbstractSmartComponent {
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
         </svg>
       </label>`
-    }
-    
-
-      <button class="event__rollup-btn" type="button">
+    }      
+     <button class="event__rollup-btn" type="button" ${isNew ? `style="display: none"` : ``}>
         <span class="visually-hidden">Open event</span>
-      </button>
-          
-    </header>    
+      </button> 
+
+    </header>
     <section class="event__details">
     ${generateEventDetails(selectedOffers, type, allPossibleOffers)}
     ${destination ? createEventDestinationInfo(destination) : ""}
@@ -270,7 +259,9 @@ export class EditPoint extends AbstractSmartComponent {
 
     if (destination.name) {
       destination.description = allDests[currentDestinationIndex].description;
-    } else destination.description = ``;
+    } else {
+      destination.description = ``;
+    }
 
     if (destination.name) {
       destination.pictures = allDests[currentDestinationIndex].pictures.slice();
@@ -312,7 +303,6 @@ export class EditPoint extends AbstractSmartComponent {
     this._submitHandler = cb;
     this.getElem().addEventListener("submit", (e) => {
       e.preventDefault();
-
       cb();
     });
   }
@@ -322,7 +312,7 @@ export class EditPoint extends AbstractSmartComponent {
     const deleteBtn = this.getElem().querySelector(`.event__reset-btn`);
     deleteBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      this.resetForm(); // это если cancel нажали, хотя можно и так, все равно удалять
+      this.resetForm();
       cb();
     });
   }

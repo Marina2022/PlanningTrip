@@ -40,7 +40,7 @@ export class PointController {
   }
 
   setDefaultView() {
-    if (this._mode == modes.EDIT) {
+    if (this._mode === modes.EDIT) {
       this.pointEdit.resetForm();
       replace(this.pointCard, this.pointEdit);
       this._mode = modes.DEFAULT;
@@ -62,7 +62,6 @@ export class PointController {
     });
 
     this.pointEdit.setDeleteHandler(() => {
-
       this._onDataChange(this, this._point, null);
     });
 
@@ -115,6 +114,4 @@ export class PointController {
     this.pointEdit.removeElem();
     document.removeEventListener("keyup", this.onEsc);
   }
-
-
 }

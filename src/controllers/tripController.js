@@ -128,7 +128,6 @@ export class TripController {
   }
 
   _onDataChange(pointController, oldPoint, newPoint, favor = false) {
-    if (!newPoint.destination) throw new Error()
     if (oldPoint === emptyPoint) {
       // delete point
       if (newPoint === null) {
